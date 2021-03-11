@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -17,6 +18,8 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,25 +39,66 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private File currentDir;
 
     private com.innovativesolutions.finder.FileArrayAdapter adapter;
-
-
+    RadioButton phone,sdcard;
+    RadioGroup radioGroup;
+    TextView hearderTitle;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer_main);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // launch app in Landscape more
 
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view); // Adding Left Nav View
         navigationView.setNavigationItemSelectedListener(this);
+        // Radio btn for select phone or SD
+        phone = (RadioButton)findViewById(R.id.rPhone);
+        sdcard = (RadioButton)findViewById(R.id.rSdCard);
+        phone.setChecked(true);
+        radioGroup = (RadioGroup)findViewById(R.id.rdGroup);
 
-
+        // Header Tile
+        hearderTitle = findViewById(R.id.header_title);
+        hearderTitle.setText("Phone");
+        //  Grid view
         grid = (GridView) findViewById(R.id.grid);
-        currentDir = new File("/sdcard/");
+        // to know the file system path
+        File f3[] =  getApplicationContext().getExternalFilesDirs(Environment.DIRECTORY_DOWNLOADS);
+
+        // set phone storage on app firt time launches
+        currentDir = new File("/storage/emulated/0/");
         fill(currentDir);
 
 
+
+
+
+
     }
+
+    public void onRadioButtonClicked(View view) {
+        boolean checked = ((RadioButton) view).isChecked();
+        String str = "";
+        // Check which radio button was clicked
+        switch (view.getId()) {
+            case R.id.rPhone:
+                if (checked)
+                    str = "Phone Selected";
+                hearderTitle.setText("Phone");
+                currentDir = new File("/storage/emulated/0/");
+                fill(currentDir);
+
+                break;
+            case R.id.rSdCard:
+                if (checked)
+                    str = "SdCard Selected";
+                hearderTitle.setText("SD Card");
+                currentDir = new File("/storage/sdcard1/");
+                fill(currentDir);
+                break;
+        }
+        Toast.makeText(getApplicationContext(), str, Toast.LENGTH_SHORT).show();
+    }
+
 
 
     private void fill(File f) {
@@ -108,7 +152,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-
         com.innovativesolutions.finder.Item o = adapter.getItem(position);
         if (o.getImage().equalsIgnoreCase("directory_icon") || o.getImage().equalsIgnoreCase("directory_up")) {
             currentDir = new File(o.getPath());
@@ -126,32 +169,69 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+// get selected Radio button first
+    public String getSelectedRadioGroup(RadioGroup radioGroup) {
+        String selected = "";
+        int checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
+
+        if (checkedRadioButtonId == R.id.rPhone) {
+            // Do something with the button
+            selected = "phone";
+        } else if (checkedRadioButtonId == R.id.rSdCard) {
+            selected = "sdcard";
+
+        }
+        return selected;
+    }
+
+
+    public void fetchSpecificSubDir(String dir){
+        String seletedRadio = getSelectedRadioGroup(radioGroup);
+        if(seletedRadio =="phone"){
+            currentDir = new File("/storage/emulated/0/"+dir+"/");
+            fill(currentDir);
+        }else if(seletedRadio =="sdcard") {
+            currentDir = new File("/storage/sdcard1/"+dir+"/");
+            fill(currentDir);
+        }
+    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-
-            System.out.println("+++++++++++++++++++");
-
-
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        if (id == R.id.download) {
+            hearderTitle.setText("Downloads");
+            fetchSpecificSubDir("Download");
+        } else if (id == R.id.camera) {
+            hearderTitle.setText("Camera");
+            fetchSpecificSubDir("DCIM");
+        } else if (id == R.id.screenshot) {
+            hearderTitle.setText("Screenshots");
+            fetchSpecificSubDir("Screenshot");
+        } else if (id == R.id.pictures) {
+            hearderTitle.setText("Pictures");
+            fetchSpecificSubDir("Pictures");
+        } else if (id == R.id.music) {
+            hearderTitle.setText("Music");
+            fetchSpecificSubDir("Music");
+        } else if (id == R.id.videos) {
+            hearderTitle.setText("Vidoes");
+            fetchSpecificSubDir("Vidoe");
+        } else if (id == R.id.documents) {
+            hearderTitle.setText("Documents");
+            fetchSpecificSubDir("Documents");
+        } else if (id == R.id.whatsapp) {
+            hearderTitle.setText("WhatsApp");
+            fetchSpecificSubDir("WhatsApp/Media");
         }
 
-        //DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        // drawer.closeDrawer(GravityCompat.START);
+
+
+
+
+
         return true;
 
     }
