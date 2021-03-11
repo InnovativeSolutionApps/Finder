@@ -12,10 +12,48 @@
         android:background="#E2F0F7">
 
 
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:orientation="horizontal">
+
+
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/rdGroup"
+                android:layout_below="@+id/txtView">
+                <RadioButton
+                    android:id="@+id/rPhone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Phone"
+                    android:onClick="onRadioButtonClicked"/>
+                <RadioButton
+                    android:id="@+id/rSdCard"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="SdCard"
+                    android:onClick="onRadioButtonClicked"/>
+
+            </RadioGroup>
+
+
+
+        </LinearLayout>
+
+
+
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
+            android:id="@+id/header_title"
             android:layout_centerHorizontal="true"
             android:text="Header" />
 
@@ -31,7 +69,7 @@
 
         <LinearLayout
             android:id="@+id/leftNav"
-            android:layout_width="200dp"
+            android:layout_width="160dp"
             android:layout_height="match_parent"
             android:layout_marginTop="50dp"
             android:background="#E2F0F7"
@@ -43,10 +81,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="start"
+                app:itemIconPadding="1dp"
+                app:itemTextAppearance="@style/NavStyle"
                 android:background="#E2F0F7"
-
                 android:fitsSystemWindows="true"
-                app:menu="@menu/activity_file_browser_drawer" />
+                app:menu="@menu/activity_file_browser_drawer"
+                />
 
         </LinearLayout>
 
@@ -70,7 +110,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:numColumns="2" />
+                android:numColumns="3" />
 
 
         </LinearLayout>
