@@ -7,29 +7,44 @@
 
 
     <LinearLayout
+        android:id="@+id/imageWithItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/imageWithItem"
         android:orientation="horizontal">
 
 
         <ImageView
             android:id="@+id/fd_Icon1"
             android:layout_width="30dip"
-            android:layout_marginLeft="5dp"
-            android:layout_height="30dip">
-        </ImageView>
+            android:layout_height="30dip"
+            android:layout_marginLeft="5dp"></ImageView>
 
 
-
-        <TextView
-            android:id="@+id/TextView02"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="10dp"
-            android:layout_below="@+id/TextView01"
-            android:layout_toRightOf="@+id/fd_Icon1"
-            android:text="@+id/TextView02"/>
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/TextView02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/fd_Icon1"
+                android:text="@+id/TextView02"
+                android:textSize="10dp" />
+
+
+            <TextView
+                android:id="@+id/TextViewDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@+id/TextViewDate"
+                android:textSize="8dp">
+
+            </TextView>
+
+
+        </LinearLayout>
 
 
     </LinearLayout>
@@ -38,24 +53,14 @@
         android:id="@+id/TextView01"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:singleLine="true"
-        android:textStyle="bold"
-        android:textSize="10dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="5dp"
         android:layout_below="@+id/imageWithItem"
-        >
+        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="5dp"
+        android:singleLine="true"
+        android:textSize="11dp"
+        android:textStyle="bold">
 
 
     </TextView>
 
-    <!--<TextView android:text="@+id/TextViewDate"
-        android:id="@+id/TextViewDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/TextView01"
-        android:layout_alignParentRight="true"
-        android:layout_marginLeft="5dip">
-
-    </TextView>-->
 </RelativeLayout>
