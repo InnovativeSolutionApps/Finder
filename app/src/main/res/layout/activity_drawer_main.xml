@@ -30,12 +30,16 @@
                 <RadioButton
                     android:id="@+id/rPhone"
                     android:layout_width="wrap_content"
+                    android:textSize="8dp"
+                    android:padding="0dp"
                     android:layout_height="wrap_content"
                     android:text="Phone"
                     android:onClick="onRadioButtonClicked"/>
                 <RadioButton
                     android:id="@+id/rSdCard"
                     android:layout_width="wrap_content"
+                    android:textSize="8dp"
+                    android:padding="0dp"
                     android:layout_height="wrap_content"
                     android:text="SdCard"
                     android:onClick="onRadioButtonClicked"/>
@@ -69,7 +73,7 @@
 
         <LinearLayout
             android:id="@+id/leftNav"
-            android:layout_width="160dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginTop="50dp"
             android:background="#E2F0F7"
@@ -78,10 +82,11 @@
 
             <com.google.android.material.navigation.NavigationView
                 android:id="@+id/nav_view"
-                android:layout_width="wrap_content"
+                android:layout_width="110dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="start"
-                app:itemIconPadding="1dp"
+                app:itemIconPadding="0dp"
+                app:itemIconSize="0dp"
                 app:itemTextAppearance="@style/NavStyle"
                 android:background="#E2F0F7"
                 android:fitsSystemWindows="true"
