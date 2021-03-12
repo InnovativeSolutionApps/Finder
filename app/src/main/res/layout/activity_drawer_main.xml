@@ -6,9 +6,11 @@
     android:background="@color/white">
 
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="70dp"
+        android:layout_alignParentTop="true"
+        android:orientation="horizontal"
         android:background="#E2F0F7">
 
 
@@ -16,8 +18,9 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:layout_weight="0"
+            android:id="@+id/radioParent"
             android:orientation="horizontal">
 
 
@@ -56,22 +59,156 @@
 
 
 
-
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:id="@+id/header_title"
-            android:layout_centerHorizontal="true"
-            android:text="Header" />
+            android:layout_height="match_parent"
+            android:id="@+id/listoptionParent"
+            android:layout_gravity="center"
+            android:layout_weight="3"
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="5dp"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:text="grid"/>
 
 
-    </RelativeLayout>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textSize="5dp"
+                android:layout_weight="1"
+                android:text="list"/>
+
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:id="@+id/searchParent"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:orientation="vertical">
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:id="@+id/search"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="140dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/header_title"
+                    android:text="Header" />
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:text="search files."
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"/>
+
+
+            </LinearLayout>
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:id="@+id/controlls"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:id="@+id/copy"
+                        android:textSize="10dp"
+                        android:textAllCaps="false"
+                        android:text="Copy"/>
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textSize="10dp"
+                        android:textAllCaps="false"
+                        android:id="@+id/paste"
+                        android:text="Paste"/>
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textSize="10dp"
+                        android:id="@+id/cut"
+                        android:textAllCaps="false"
+                        android:text="Cut"/>
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textSize="10dp"
+                        android:textAllCaps="false"
+                        android:id="@+id/share"
+                        android:text="Share"/>
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:id="@+id/newfolder"
+                        android:textAllCaps="false"
+                        android:textSize="10dp"
+                        android:text="New Folder"/>
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:id="@+id/newfolder1"
+                        android:textAllCaps="false"
+                        android:textSize="10dp"
+                        android:text="New Folder1"/>
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:id="@+id/newfolder2"
+                        android:textAllCaps="false"
+                        android:textSize="10dp"
+                        android:text="New Folder2"/>
+
+                </LinearLayout>
+
+
+
+
+
+        </LinearLayout>
+
+
+
+
+
+
+
+
+
+
+
+    </LinearLayout>
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="70dp"
         android:orientation="horizontal">
 
 
@@ -79,7 +216,6 @@
             android:id="@+id/leftNav"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginTop="50dp"
             android:background="#E2F0F7"
             android:orientation="vertical">
 
@@ -102,7 +238,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="50dp"
             android:background="@color/white"
             android:orientation="vertical">
 
