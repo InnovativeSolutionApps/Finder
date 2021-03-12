@@ -8,6 +8,9 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.app.ActionBar;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -17,6 +20,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ListView;
@@ -26,6 +30,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
+import com.innovativesolutions.finder.fileUtil.MediaFile;
+import com.innovativesolutions.finder.fileUtil.MimeUtils;
 
 import java.io.File;
 import java.sql.Date;
@@ -41,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     GridView grid;
     ListView list;
     private File currentDir;
+    private long timeStamp;
 
     private com.innovativesolutions.finder.FileArrayAdapter adapter;
     RadioButton phone, sdcard;
@@ -194,18 +201,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (o.getImage().equalsIgnoreCase("directory_icon") || o.getImage().equalsIgnoreCase("directory_up")) {
             currentDir = new File(o.getPath());
             fill(currentDir);
-            //Toast.makeText(this, "Folder Clicked: "+ currentDir, Toast.LENGTH_SHORT).show();
         } else {
-            //onFileClick(o);
+            File temp_file = new File(o.getPath());
+            String mimeType = MediaFile.getMimeTypeForFile(temp_file.toString()); //getContentResolver().getType(Uri.parse("file://" + temp_file));
+
+            String fileName = temp_file.getName();
+            int dotposition = fileName.lastIndexOf(".");
+            String file_Extension = "";
+            if (dotposition != -1) {
+                String filename_Without_Ext = fileName.substring(0, dotposition);
+                file_Extension = fileName.substring(dotposition + 1, fileName.length());
+            }
+            if (mimeType == null) {
+                mimeType = MimeUtils.guessMimeTypeFromExtension(file_Extension);
+            }
+
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.setDataAndType(Uri.parse("file://" + temp_file), mimeType);
+            ResolveInfo info = getPackageManager().resolveActivity(intent,
+                    PackageManager.MATCH_DEFAULT_ONLY);
+            if (info != null) {
+                //startActivity(Intent.createChooser(intent, "Complete action using"));
+                startActivity(intent);
+            }
         }
 
     }
 
-
-    private void onFileClick(com.innovativesolutions.finder.Item o) {
-        Toast.makeText(this, "File Clicked: " + currentDir, Toast.LENGTH_SHORT).show();
-
-    }
 
     // get selected Radio button first
     public String getSelectedRadioGroup(RadioGroup radioGroup) {
@@ -293,4 +316,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
+    @Override
+    public void onBackPressed() {
+        String parent = currentDir.getParent() != null ? currentDir.getParent() : null;
+        if (parent != null) {
+            currentDir = new File(currentDir.getParent());
+            fill(currentDir);
+        } else {
+            Toast.makeText(getApplicationContext(), "AT THE ROOT Folder, press one more back to Exit App", Toast.LENGTH_SHORT).show();
+            if (System.currentTimeMillis() - timeStamp < 200) {
+                super.onBackPressed();
+            }
+            timeStamp = System.currentTimeMillis();
+        }
+    }
 }
