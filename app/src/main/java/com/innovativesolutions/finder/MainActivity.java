@@ -11,6 +11,7 @@ import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.FileUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -28,6 +29,7 @@ import com.google.android.material.navigation.NavigationView;
 import java.io.File;
 import java.sql.Date;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -39,9 +41,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private File currentDir;
 
     private com.innovativesolutions.finder.FileArrayAdapter adapter;
-    RadioButton phone,sdcard;
+    RadioButton phone, sdcard;
     RadioGroup radioGroup;
     TextView hearderTitle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,10 +54,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view); // Adding Left Nav View
         navigationView.setNavigationItemSelectedListener(this);
         // Radio btn for select phone or SD
-        phone = (RadioButton)findViewById(R.id.rPhone);
-        sdcard = (RadioButton)findViewById(R.id.rSdCard);
+        phone = (RadioButton) findViewById(R.id.rPhone);
+        sdcard = (RadioButton) findViewById(R.id.rSdCard);
         phone.setChecked(true);
-        radioGroup = (RadioGroup)findViewById(R.id.rdGroup);
+        radioGroup = (RadioGroup) findViewById(R.id.rdGroup);
 
         // Header Tile
         hearderTitle = findViewById(R.id.header_title);
@@ -62,15 +65,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //  Grid view
         grid = (GridView) findViewById(R.id.grid);
         // to know the file system path
-        File f3[] =  getApplicationContext().getExternalFilesDirs(Environment.DIRECTORY_DOWNLOADS);
+        File f3[] = getApplicationContext().getExternalFilesDirs(Environment.DIRECTORY_DOWNLOADS);
 
         // set phone storage on app firt time launches
         currentDir = new File("/storage/emulated/0/");
         fill(currentDir);
-
-
-
-
 
 
     }
@@ -100,12 +99,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-
     private void fill(File f) {
 
         TextView absolutePath = findViewById(R.id.filePath);
         File[] dirs = f.listFiles();
-        absolutePath.setText("Current Dir: " + f.getAbsolutePath());
+        absolutePath.setText(" => : " + f.getAbsolutePath());
         List<Item> dir = new ArrayList<Item>();
         List<com.innovativesolutions.finder.Item> fls = new ArrayList<com.innovativesolutions.finder.Item>();
         try {
@@ -128,8 +126,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     //String formated = lastModDate.toString();
                     dir.add(new com.innovativesolutions.finder.Item(ff.getName(), num_item, date_modify, ff.getAbsolutePath(), "directory_icon"));
                 } else {
-
-                    fls.add(new com.innovativesolutions.finder.Item(ff.getName(), ff.length() + " Byte", date_modify, ff.getAbsolutePath(), "file_icon"));
+                    fls.add(new com.innovativesolutions.finder.Item(ff.getName(), convertByteToMb(ff.length()), date_modify, ff.getAbsolutePath(), "file_icon"));
                 }
             }
         } catch (Exception e) {
@@ -169,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-// get selected Radio button first
+    // get selected Radio button first
     public String getSelectedRadioGroup(RadioGroup radioGroup) {
         String selected = "";
         int checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
@@ -185,13 +182,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    public void fetchSpecificSubDir(String dir){
+    public void fetchSpecificSubDir(String dir) {
         String seletedRadio = getSelectedRadioGroup(radioGroup);
-        if(seletedRadio =="phone"){
-            currentDir = new File("/storage/emulated/0/"+dir+"/");
+        if (seletedRadio == "phone") {
+            hearderTitle.setText("Phone - " + dir);
+            currentDir = new File("/storage/emulated/0/" + dir + "/");
             fill(currentDir);
-        }else if(seletedRadio =="sdcard") {
-            currentDir = new File("/storage/sdcard1/"+dir+"/");
+        } else if (seletedRadio == "sdcard") {
+            hearderTitle.setText("SD Card - " + dir);
+            currentDir = new File("/storage/sdcard1/" + dir + "/");
             fill(currentDir);
         }
     }
@@ -202,38 +201,39 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         if (id == R.id.download) {
-            hearderTitle.setText("Downloads");
             fetchSpecificSubDir("Download");
         } else if (id == R.id.camera) {
-            hearderTitle.setText("Camera");
             fetchSpecificSubDir("DCIM");
         } else if (id == R.id.screenshot) {
-            hearderTitle.setText("Screenshots");
             fetchSpecificSubDir("Screenshot");
         } else if (id == R.id.pictures) {
-            hearderTitle.setText("Pictures");
             fetchSpecificSubDir("Pictures");
         } else if (id == R.id.music) {
-            hearderTitle.setText("Music");
             fetchSpecificSubDir("Music");
         } else if (id == R.id.videos) {
-            hearderTitle.setText("Vidoes");
             fetchSpecificSubDir("Vidoe");
         } else if (id == R.id.documents) {
-            hearderTitle.setText("Documents");
             fetchSpecificSubDir("Documents");
         } else if (id == R.id.whatsapp) {
-            hearderTitle.setText("WhatsApp");
             fetchSpecificSubDir("WhatsApp/Media");
         }
 
 
-
-
-
-
         return true;
 
+    }
+
+    public String convertByteToMb(long size) {
+        String hrSize = "";
+        double m = size / 1048576.0;
+        DecimalFormat dec = new DecimalFormat("0.00");
+
+        if (m > 1) {
+            hrSize = dec.format(m).concat(" MB");
+        } else {
+            hrSize = dec.format(size).concat(" KB");
+        }
+        return hrSize;
     }
 
 
