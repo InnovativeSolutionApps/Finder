@@ -19,6 +19,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -38,11 +39,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private static final int REQUEST_PATH = 1;
     GridView grid;
+    ListView list;
     private File currentDir;
 
     private com.innovativesolutions.finder.FileArrayAdapter adapter;
     RadioButton phone, sdcard;
-    RadioGroup radioGroup;
+    RadioGroup radioGroup, listViewOptionRadioG;
     TextView hearderTitle;
 
     @Override
@@ -58,12 +60,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         sdcard = (RadioButton) findViewById(R.id.rSdCard);
         phone.setChecked(true);
         radioGroup = (RadioGroup) findViewById(R.id.rdGroup);
-
+        listViewOptionRadioG = (RadioGroup) findViewById(R.id.viewOptionRadio);
         // Header Tile
         hearderTitle = findViewById(R.id.header_title);
         hearderTitle.setText("Phone");
         //  Grid view
         grid = (GridView) findViewById(R.id.grid);
+        // LIst VIew
+        list = (ListView) findViewById(R.id.listView);
+
+
         // to know the file system path
         File f3[] = getApplicationContext().getExternalFilesDirs(Environment.DIRECTORY_DOWNLOADS);
 
@@ -99,7 +105,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    private void fill(File f) {
+
+
+    public void onOptionListView(View view) {
+
+        boolean checked = ((RadioButton) view).isChecked();
+        String str = "";
+        // Check which radio button was clicked
+        switch (view.getId()) {
+            case R.id.radioGrid:
+                if (checked)
+                    str = "GridView Selected";
+                fill(currentDir);
+                break;
+            case R.id.radioList:
+                if (checked)
+                    str = "ListView Selected";
+                fill(currentDir);
+                break;
+        }
+        Toast.makeText(getApplicationContext(), str, Toast.LENGTH_SHORT).show();
+    }
+
+        private void fill(File f) {
 
         TextView absolutePath = findViewById(R.id.filePath);
         File[] dirs = f.listFiles();
@@ -137,12 +165,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         dir.addAll(fls);
         if (!f.getName().equalsIgnoreCase("sdcard"))
             dir.add(0, new com.innovativesolutions.finder.Item("..", "Parent Directory", "", f.getParent(), "directory_up"));
-        adapter = new com.innovativesolutions.finder.FileArrayAdapter(com.innovativesolutions.finder.MainActivity.this, R.layout.file_view, dir);
+
+        // decide list view option whether grid or list
+        if (getSelectedViewOptionRadioBtn(listViewOptionRadioG).equals("grid")) {
+             adapter = new com.innovativesolutions.finder.FileArrayAdapter(com.innovativesolutions.finder.MainActivity.this, R.layout.file_view, dir);
+            list.setVisibility(View.GONE);
+            grid.setVisibility(View.VISIBLE);
+            grid.setAdapter(adapter);
+            grid.setOnItemClickListener(this);
+
+        } else if (getSelectedViewOptionRadioBtn(listViewOptionRadioG).equals("list")) {
+            adapter = new com.innovativesolutions.finder.FileArrayAdapter(com.innovativesolutions.finder.MainActivity.this, R.layout.list_view_item, dir);
+            grid.setVisibility(View.GONE);
+            list.setVisibility(View.VISIBLE);
+            list.setAdapter(adapter);
+            list.setOnItemClickListener(this);
+        }
 
 
-        grid.setAdapter(adapter);
-        grid.setOnItemClickListener(this);
-        System.out.println("");
+
     }
 
 
@@ -181,6 +222,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return selected;
     }
 
+    public String getSelectedViewOptionRadioBtn(RadioGroup radioGroup){
+
+        String selected = "";
+        int checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
+
+        if (checkedRadioButtonId == R.id.radioGrid) {
+            // Do something with the button
+            selected = "grid";
+        } else if (checkedRadioButtonId == R.id.radioList) {
+            selected = "list";
+
+        }
+        return selected;
+
+    }
 
     public void fetchSpecificSubDir(String dir) {
         String seletedRadio = getSelectedRadioGroup(radioGroup);

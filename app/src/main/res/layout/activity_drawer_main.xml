@@ -17,38 +17,47 @@
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_weight="0"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:layout_marginLeft="11dp"
             android:id="@+id/radioParent"
             android:orientation="horizontal">
 
 
             <RadioGroup
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_gravity="center"
+                android:gravity="center"
                 android:id="@+id/rdGroup"
                 android:layout_below="@+id/txtView">
+
                 <RadioButton
                     android:id="@+id/rPhone"
-                    android:layout_width="match_parent"
-                    android:textSize="8dp"
-                    android:scaleX="1"
-                    android:scaleY="1"
-                    android:padding="0dp"
+                    android:layout_width="60dp"
+                    android:gravity="center"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/radio_flat_selector"
+                    android:button="@android:color/transparent"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="8dp"
                     android:text="Phone"
+                    android:textColor="@drawable/radio_flat_text_selector"
                     android:onClick="onRadioButtonClicked"/>
+
                 <RadioButton
                     android:id="@+id/rSdCard"
-                    android:layout_width="match_parent"
-                    android:textSize="8dp"
-                    android:padding="0dp"
-                    android:scaleX="1"
-                    android:scaleY="1"
+                    android:layout_width="60dp"
+                    android:gravity="center"
                     android:layout_height="wrap_content"
-                    android:text="SdCard"
+                    android:background="@drawable/radio_flat_selector"
+                    android:button="@android:color/transparent"
+                    android:layout_gravity="center"
+                    android:text="SD Card"
+                    android:textColor="@drawable/radio_flat_text_selector"
                     android:onClick="onRadioButtonClicked"/>
 
             </RadioGroup>
@@ -64,25 +73,57 @@
             android:layout_height="match_parent"
             android:id="@+id/listoptionParent"
             android:layout_gravity="center"
-            android:layout_weight="3"
+            android:layout_weight="2"
             android:orientation="horizontal">
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="5dp"
-                android:layout_weight="1"
+
+            <RadioGroup
+                android:id="@+id/viewOptionRadio"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:text="grid"/>
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"
+
+                >
 
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textSize="5dp"
-                android:layout_weight="1"
-                android:text="list"/>
+                <RadioButton
+                    android:id="@+id/radioGrid"
+                    android:layout_width="50dp"
+                    android:gravity="center"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/radio_flat_selector"
+                    android:button="@android:color/transparent"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="16dp"
+                    android:checked="true"
+                    android:text="Grid"
+                    android:onClick="onOptionListView"
+                    android:textColor="@drawable/radio_flat_text_selector" />
+
+                <RadioButton
+                    android:id="@+id/radioList"
+                    android:gravity="center"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/radio_flat_selector"
+                    android:button="@android:color/transparent"
+                    android:layout_marginRight="16dp"
+                    android:layout_gravity="center"
+                    android:onClick="onOptionListView"
+                    android:text="List"
+                    android:textColor="@drawable/radio_flat_text_selector" />
+
+            </RadioGroup>
+
+
+
+
+
+
+
+
 
 
 
@@ -106,13 +147,13 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="140dp"
+                    android:layout_width="160dp"
                     android:layout_height="match_parent"
                     android:id="@+id/header_title"
                     android:text="Header" />
 
                 <EditText
-                    android:layout_width="wrap_content"
+                    android:layout_width="70dp"
                     android:text="search files."
                     android:layout_weight="1"
                     android:layout_height="match_parent"/>
@@ -134,12 +175,14 @@
                         android:layout_height="match_parent"
                         android:id="@+id/copy"
                         android:textSize="10dp"
+                        android:layout_weight="1"
                         android:textAllCaps="false"
                         android:text="Copy"/>
                     <Button
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:textSize="10dp"
+                        android:layout_weight="1"
                         android:textAllCaps="false"
                         android:id="@+id/paste"
                         android:text="Paste"/>
@@ -148,41 +191,22 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:textSize="10dp"
+                        android:layout_weight="1"
                         android:id="@+id/cut"
                         android:textAllCaps="false"
                         android:text="Cut"/>
 
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:textSize="10dp"
-                        android:textAllCaps="false"
-                        android:id="@+id/share"
-                        android:text="Share"/>
 
                     <Button
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:id="@+id/newfolder"
                         android:textAllCaps="false"
+                        android:layout_weight="1"
                         android:textSize="10dp"
                         android:text="New Folder"/>
 
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:id="@+id/newfolder1"
-                        android:textAllCaps="false"
-                        android:textSize="10dp"
-                        android:text="New Folder1"/>
 
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:id="@+id/newfolder2"
-                        android:textAllCaps="false"
-                        android:textSize="10dp"
-                        android:text="New Folder2"/>
 
                 </LinearLayout>
 
@@ -254,6 +278,12 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:numColumns="3" />
+
+            <ListView
+                android:layout_width="match_parent"
+                android:id="@+id/listView"
+                android:layout_height="match_parent"/>
+
 
 
         </LinearLayout>
