@@ -1,7 +1,14 @@
 package com.innovativesolutions.finder;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.ImageDecoder;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Build;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +16,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 
 
@@ -48,10 +61,24 @@ public class FileArrayAdapter extends ArrayAdapter<Item> {
             TextView t3 = (TextView) v.findViewById(R.id.TextViewDate);
             /* Take the ImageView from layout and set the city's image */
             ImageView imageCity = (ImageView) v.findViewById(R.id.fd_Icon1);
-            String uri = "drawable/" + o.getImage();
-            int imageResource = c.getResources().getIdentifier(uri, null, c.getPackageName());
-            Drawable image = c.getResources().getDrawable(imageResource);
-            imageCity.setImageDrawable(image);
+
+            System.out.println(">>>>> "+ o.getPath());
+            System.out.println(">>>>>NNN "+ o.getName());
+
+            if(o.getName().contains(".jpg") || o.getName().contains(".png")){
+                Glide.with(c)
+                        .load(new File(o.getPath()))
+                        .centerCrop()
+                        .into(imageCity);
+
+            }
+            else {
+                String uri = "drawable/" + o.getImage();
+                int imageResource = c.getResources().getIdentifier(uri, null, c.getPackageName());
+                Drawable image = c.getDrawable(imageResource);
+                imageCity.setImageDrawable(image);
+            }
+
 
             if (t1 != null)
                 t1.setText(o.getName());
@@ -64,5 +91,35 @@ public class FileArrayAdapter extends ArrayAdapter<Item> {
         }
         return v;
     }
+
+
+
+
+
+    public Bitmap loadFromUri(Uri photoUri) {
+        Bitmap image = null;
+        try {
+            // check version of Android on device
+            if(Build.VERSION.SDK_INT > 27){
+                // on newer versions of Android, use the new decodeBitmap method
+                ImageDecoder.Source source = ImageDecoder.createSource(c.getContentResolver(), photoUri);
+                image = ImageDecoder.decodeBitmap(source);
+            } else {
+                // support older versions of Android by using getBitmap
+                image = MediaStore.Images.Media.getBitmap(c.getContentResolver(), photoUri);
+
+
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return image;
+    }
+
+
+
+
+
 
 }
