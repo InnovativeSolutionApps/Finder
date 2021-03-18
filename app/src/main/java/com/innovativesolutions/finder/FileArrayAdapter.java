@@ -13,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -51,9 +53,6 @@ public class FileArrayAdapter extends ArrayAdapter<Item> {
             v = vi.inflate(id, null);
         }
 
-        /* create a new view of my layout and inflate it in the row */
-        //convertView = ( RelativeLayout ) inflater.inflate( resource, null );
-
         final Item o = items.get(position);
         if (o != null) {
             TextView t1 = (TextView) v.findViewById(R.id.TextView01);
@@ -71,8 +70,7 @@ public class FileArrayAdapter extends ArrayAdapter<Item> {
                         .centerCrop()
                         .into(imageCity);
 
-            }
-            else {
+            } else {
                 String uri = "drawable/" + o.getImage();
                 int imageResource = c.getResources().getIdentifier(uri, null, c.getPackageName());
                 Drawable image = c.getDrawable(imageResource);
@@ -84,9 +82,9 @@ public class FileArrayAdapter extends ArrayAdapter<Item> {
                 t1.setText(o.getName());
             if (t2 != null)
                 t2.setText(o.getData());
-                       if(t3!=null){
-						   t3.setText(o.getDate());
-					   }
+            if (t3 != null) {
+                t3.setText(o.getDate());
+            }
 
         }
         return v;
@@ -94,28 +92,6 @@ public class FileArrayAdapter extends ArrayAdapter<Item> {
 
 
 
-
-
-    public Bitmap loadFromUri(Uri photoUri) {
-        Bitmap image = null;
-        try {
-            // check version of Android on device
-            if(Build.VERSION.SDK_INT > 27){
-                // on newer versions of Android, use the new decodeBitmap method
-                ImageDecoder.Source source = ImageDecoder.createSource(c.getContentResolver(), photoUri);
-                image = ImageDecoder.decodeBitmap(source);
-            } else {
-                // support older versions of Android by using getBitmap
-                image = MediaStore.Images.Media.getBitmap(c.getContentResolver(), photoUri);
-
-
-
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return image;
-    }
 
 
 

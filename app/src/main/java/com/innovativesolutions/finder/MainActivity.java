@@ -1,11 +1,13 @@
 package com.innovativesolutions.finder;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.app.ActionBar;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
@@ -15,6 +17,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.FileUtils;
+import android.text.InputType;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -22,6 +26,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.RadioButton;
@@ -34,6 +39,9 @@ import com.innovativesolutions.finder.fileUtil.MediaFile;
 import com.innovativesolutions.finder.fileUtil.MimeUtils;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -41,7 +49,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, AdapterView.OnItemClickListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, AdapterView.OnItemClickListener  {
 
     private static final int REQUEST_PATH = 1;
     GridView grid;
@@ -79,6 +87,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // to know the file system path
         File f3[] = getApplicationContext().getExternalFilesDirs(Environment.DIRECTORY_DOWNLOADS);
+
+
+
+
 
         // set phone storage on app firt time launches
         currentDir = new File("/storage/emulated/0/");
@@ -198,6 +210,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
         com.innovativesolutions.finder.Item o = adapter.getItem(position);
+
+        System.out.println("111111111");
+
         if (o.getImage().equalsIgnoreCase("directory_icon") || o.getImage().equalsIgnoreCase("directory_up")) {
             currentDir = new File(o.getPath());
             fill(currentDir);
@@ -330,4 +345,56 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             timeStamp = System.currentTimeMillis();
         }
     }
+
+
+    public void createNewFolder(View view)
+    {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Title");
+
+        // Set up the input
+        final EditText m_edtinput = new EditText(this);
+        // Specify the type of input expected;
+        m_edtinput.setInputType(InputType.TYPE_CLASS_TEXT);
+
+        // Set up the buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String m_text = " ";
+                m_text = m_edtinput.getText().toString();
+
+                Log.d("cur dir", currentDir.getAbsolutePath());
+
+                File m_newPath = new File(currentDir, m_text);
+                if (!m_newPath.exists()) {
+                    m_newPath.mkdirs();
+                }else {
+                    // give toast folder already create with the name.
+                    Toast.makeText(getApplicationContext(), "Folder already creaetd.", Toast.LENGTH_SHORT).show();
+
+                }
+                fill(currentDir);
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.setView(m_edtinput);
+        builder.show();
+    }
+
+
 }
+
+
+
+
+
+
