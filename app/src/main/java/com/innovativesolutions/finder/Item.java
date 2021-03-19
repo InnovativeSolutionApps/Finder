@@ -6,7 +6,43 @@ public class Item implements Comparable<Item>{
 	private String date;
 	private String path;
 	private String image;
-	
+
+	public boolean isSelect() {
+		return isSelect;
+	}
+
+	private boolean isSelect;
+
+
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setData(String data) {
+		this.data = data;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+
+	public void setSelect(boolean select) {
+		isSelect = select;
+	}
+
+
+
+
+
 	public Item(String n, String d, String dt, String p, String img)
 	{
 		name = n;
@@ -35,6 +71,10 @@ public class Item implements Comparable<Item>{
 	public String getImage() {
 		return image;
 	}
+
+
+
+
 	
 	public int compareTo(com.innovativesolutions.finder.Item o) {
 		if(this.name != null)

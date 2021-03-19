@@ -19,7 +19,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity android:name=".LaunchActivity"
-            android:screenOrientation="landscape">
+           >
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,7 +33,7 @@
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|screenSize"
-            android:screenOrientation="landscape">
+           >
 
         </activity>
     </application>

@@ -1,11 +1,15 @@
 package com.innovativesolutions.finder;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ActionBar;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
@@ -15,6 +19,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.FileUtils;
+import android.text.InputType;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -22,6 +28,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.RadioButton;
@@ -34,6 +41,9 @@ import com.innovativesolutions.finder.fileUtil.MediaFile;
 import com.innovativesolutions.finder.fileUtil.MimeUtils;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -41,7 +51,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, AdapterView.OnItemClickListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, Adapter.OnClickListener {
 
     private static final int REQUEST_PATH = 1;
     GridView grid;
@@ -49,16 +59,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private File currentDir;
     private long timeStamp;
 
-    private com.innovativesolutions.finder.FileArrayAdapter adapter;
     RadioButton phone, sdcard;
     RadioGroup radioGroup, listViewOptionRadioG;
     TextView hearderTitle;
+
+
+    private RecyclerView recyclerView=null;
+    public Adapter adapter=null;
+    private ArrayList<Item> dir;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer_main);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // launch app in Landscape more
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view); // Adding Left Nav View
         navigationView.setNavigationItemSelectedListener(this);
@@ -67,15 +83,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         sdcard = (RadioButton) findViewById(R.id.rSdCard);
         phone.setChecked(true);
         radioGroup = (RadioGroup) findViewById(R.id.rdGroup);
-        listViewOptionRadioG = (RadioGroup) findViewById(R.id.viewOptionRadio);
         // Header Tile
         hearderTitle = findViewById(R.id.header_title);
         hearderTitle.setText("Phone");
-        //  Grid view
+       /* //  Grid view
         grid = (GridView) findViewById(R.id.grid);
         // LIst VIew
-        list = (ListView) findViewById(R.id.listView);
-
+        list = (ListView) findViewById(R.id.listView);*/
 
         // to know the file system path
         File f3[] = getApplicationContext().getExternalFilesDirs(Environment.DIRECTORY_DOWNLOADS);
@@ -85,61 +99,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fill(currentDir);
 
 
-    }
 
-    public void onRadioButtonClicked(View view) {
-        boolean checked = ((RadioButton) view).isChecked();
-        String str = "";
-        // Check which radio button was clicked
-        switch (view.getId()) {
-            case R.id.rPhone:
-                if (checked)
-                    str = "Phone Selected";
-                hearderTitle.setText("Phone");
-                currentDir = new File("/storage/emulated/0/");
-                fill(currentDir);
 
-                break;
-            case R.id.rSdCard:
-                if (checked)
-                    str = "SdCard Selected";
-                hearderTitle.setText("SD Card");
-                currentDir = new File("/storage/sdcard1/");
-                fill(currentDir);
-                break;
-        }
-        Toast.makeText(getApplicationContext(), str, Toast.LENGTH_SHORT).show();
+
+
+
+
+
     }
 
 
-
-
-    public void onOptionListView(View view) {
-
-        boolean checked = ((RadioButton) view).isChecked();
-        String str = "";
-        // Check which radio button was clicked
-        switch (view.getId()) {
-            case R.id.radioGrid:
-                if (checked)
-                    str = "GridView Selected";
-                fill(currentDir);
-                break;
-            case R.id.radioList:
-                if (checked)
-                    str = "ListView Selected";
-                fill(currentDir);
-                break;
-        }
-        Toast.makeText(getApplicationContext(), str, Toast.LENGTH_SHORT).show();
-    }
 
         private void fill(File f) {
 
         TextView absolutePath = findViewById(R.id.filePath);
         File[] dirs = f.listFiles();
         absolutePath.setText(" => : " + f.getAbsolutePath());
-        List<Item> dir = new ArrayList<Item>();
+           dir = new ArrayList<Item>();
         List<com.innovativesolutions.finder.Item> fls = new ArrayList<com.innovativesolutions.finder.Item>();
         try {
             for (File ff : dirs) {
@@ -173,61 +149,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (!f.getName().equalsIgnoreCase("sdcard"))
             dir.add(0, new com.innovativesolutions.finder.Item("..", "Parent Directory", "", f.getParent(), "directory_up"));
 
-        // decide list view option whether grid or list
-        if (getSelectedViewOptionRadioBtn(listViewOptionRadioG).equals("grid")) {
-             adapter = new com.innovativesolutions.finder.FileArrayAdapter(com.innovativesolutions.finder.MainActivity.this, R.layout.file_view, dir);
-            list.setVisibility(View.GONE);
-            grid.setVisibility(View.VISIBLE);
-            grid.setAdapter(adapter);
-            grid.setOnItemClickListener(this);
 
-        } else if (getSelectedViewOptionRadioBtn(listViewOptionRadioG).equals("list")) {
-            adapter = new com.innovativesolutions.finder.FileArrayAdapter(com.innovativesolutions.finder.MainActivity.this, R.layout.list_view_item, dir);
-            grid.setVisibility(View.GONE);
-            list.setVisibility(View.VISIBLE);
-            list.setAdapter(adapter);
-            list.setOnItemClickListener(this);
-        }
-
+            recyclerView=(RecyclerView)findViewById(R.id.recyclerView);
+            RecyclerView.LayoutManager manager=new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+            recyclerView.setLayoutManager(manager);
+            adapter=new Adapter(dir,MainActivity.this,this);
+            recyclerView.setAdapter(adapter);
 
 
     }
 
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-        com.innovativesolutions.finder.Item o = adapter.getItem(position);
-        if (o.getImage().equalsIgnoreCase("directory_icon") || o.getImage().equalsIgnoreCase("directory_up")) {
-            currentDir = new File(o.getPath());
-            fill(currentDir);
-        } else {
-            File temp_file = new File(o.getPath());
-            String mimeType = MediaFile.getMimeTypeForFile(temp_file.toString()); //getContentResolver().getType(Uri.parse("file://" + temp_file));
-
-            String fileName = temp_file.getName();
-            int dotposition = fileName.lastIndexOf(".");
-            String file_Extension = "";
-            if (dotposition != -1) {
-                String filename_Without_Ext = fileName.substring(0, dotposition);
-                file_Extension = fileName.substring(dotposition + 1, fileName.length());
-            }
-            if (mimeType == null) {
-                mimeType = MimeUtils.guessMimeTypeFromExtension(file_Extension);
-            }
-
-            Intent intent = new Intent();
-            intent.setAction(Intent.ACTION_VIEW);
-            intent.setDataAndType(Uri.parse("file://" + temp_file), mimeType);
-            ResolveInfo info = getPackageManager().resolveActivity(intent,
-                    PackageManager.MATCH_DEFAULT_ONLY);
-            if (info != null) {
-                //startActivity(Intent.createChooser(intent, "Complete action using"));
-                startActivity(intent);
-            }
-        }
-
-    }
 
 
     // get selected Radio button first
@@ -245,21 +176,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return selected;
     }
 
-    public String getSelectedViewOptionRadioBtn(RadioGroup radioGroup){
 
-        String selected = "";
-        int checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
-
-        if (checkedRadioButtonId == R.id.radioGrid) {
-            // Do something with the button
-            selected = "grid";
-        } else if (checkedRadioButtonId == R.id.radioList) {
-            selected = "list";
-
-        }
-        return selected;
-
-    }
 
     public void fetchSpecificSubDir(String dir) {
         String seletedRadio = getSelectedRadioGroup(radioGroup);
@@ -330,4 +247,138 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             timeStamp = System.currentTimeMillis();
         }
     }
+
+    public void onRadioButtonClicked(View view) {
+        boolean checked = ((RadioButton) view).isChecked();
+        String str = "";
+        // Check which radio button was clicked
+        switch (view.getId()) {
+            case R.id.rPhone:
+                if (checked)
+                    str = "Phone Selected";
+                hearderTitle.setText("Phone");
+                currentDir = new File("/storage/emulated/0/");
+                fill(currentDir);
+
+                break;
+            case R.id.rSdCard:
+                if (checked)
+                    str = "SdCard Selected";
+                hearderTitle.setText("SD Card");
+                currentDir = new File("/storage/sdcard1/");
+                fill(currentDir);
+                break;
+        }
+        Toast.makeText(getApplicationContext(), str, Toast.LENGTH_SHORT).show();
+    }
+
+
+
+
+
+
+
+    public void createNewFolder(View view)
+    {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Title");
+
+        // Set up the input
+        final EditText m_edtinput = new EditText(this);
+        // Specify the type of input expected;
+        m_edtinput.setInputType(InputType.TYPE_CLASS_TEXT);
+
+        // Set up the buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String m_text = " ";
+                m_text = m_edtinput.getText().toString();
+
+                Log.d("cur dir", currentDir.getAbsolutePath());
+
+                File m_newPath = new File(currentDir, m_text);
+                if (!m_newPath.exists()) {
+                    m_newPath.mkdirs();
+                }else {
+                    // give toast folder already create with the name.
+                    Toast.makeText(getApplicationContext(), "Folder already creaetd.", Toast.LENGTH_SHORT).show();
+
+                }
+                fill(currentDir);
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.setView(m_edtinput);
+        builder.show();
+    }
+
+
+
+
+    @Override
+    public void onClickListener(int position, Item model, String element) {
+
+        if(element == "textView"){
+
+            try{
+                dir.set(position,model);
+            }catch (Exception e){
+
+            }
+
+        }else if(element == "image"){
+            com.innovativesolutions.finder.Item o = adapter.getItem(position);
+
+            System.out.println("---- ONCLICK ------");
+
+            if (o.getImage().equalsIgnoreCase("directory_icon") || o.getImage().equalsIgnoreCase("directory_up")) {
+                currentDir = new File(o.getPath());
+                fill(currentDir);
+            } else {
+                File temp_file = new File(o.getPath());
+                String mimeType = MediaFile.getMimeTypeForFile(temp_file.toString()); //getContentResolver().getType(Uri.parse("file://" + temp_file));
+
+                String fileName = temp_file.getName();
+                int dotposition = fileName.lastIndexOf(".");
+                String file_Extension = "";
+                if (dotposition != -1) {
+                    String filename_Without_Ext = fileName.substring(0, dotposition);
+                    file_Extension = fileName.substring(dotposition + 1, fileName.length());
+                }
+                if (mimeType == null) {
+                    mimeType = MimeUtils.guessMimeTypeFromExtension(file_Extension);
+                }
+
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_VIEW);
+                intent.setDataAndType(Uri.parse("file://" + temp_file), mimeType);
+                ResolveInfo info = getPackageManager().resolveActivity(intent,
+                        PackageManager.MATCH_DEFAULT_ONLY);
+                if (info != null) {
+                    //startActivity(Intent.createChooser(intent, "Complete action using"));
+                    startActivity(intent);
+                }
+            }
+
+        }else {
+
+        }
+
+
+    }
 }
+
+
+
+
+
+
