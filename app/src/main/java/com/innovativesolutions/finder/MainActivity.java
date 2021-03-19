@@ -18,7 +18,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.FileUtils;
 import android.text.InputType;
 import android.util.Log;
 import android.view.MenuItem;
@@ -40,10 +39,16 @@ import com.google.android.material.navigation.NavigationView;
 import com.innovativesolutions.finder.fileUtil.MediaFile;
 import com.innovativesolutions.finder.fileUtil.MimeUtils;
 
+import org.apache.commons.io.FileUtils;
+
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.channels.FileChannel;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -68,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public Adapter adapter=null;
     private ArrayList<Item> dir;
 
+    public   ArrayList<Item> copiedItems = new ArrayList<Item>();
 
 
 
@@ -75,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer_main);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // launch app in Portrait only
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view); // Adding Left Nav View
         navigationView.setNavigationItemSelectedListener(this);
@@ -92,7 +99,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         list = (ListView) findViewById(R.id.listView);*/
 
         // to know the file system path
-        File f3[] = getApplicationContext().getExternalFilesDirs(Environment.DIRECTORY_DOWNLOADS);
+        File[] f3 = getApplicationContext().getExternalFilesDirs(Environment.DIRECTORY_DOWNLOADS);
+
+
+
+        System.out.println(">>>> : "+ f3[0].toString());
+        System.out.println(">>>> : "+ f3[1].toString());
+
+
+
 
         // set phone storage on app firt time launches
         currentDir = new File("/storage/emulated/0/");
@@ -149,13 +164,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (!f.getName().equalsIgnoreCase("sdcard"))
             dir.add(0, new com.innovativesolutions.finder.Item("..", "Parent Directory", "", f.getParent(), "directory_up"));
 
-
             recyclerView=(RecyclerView)findViewById(R.id.recyclerView);
             RecyclerView.LayoutManager manager=new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
             recyclerView.setLayoutManager(manager);
             adapter=new Adapter(dir,MainActivity.this,this);
             recyclerView.setAdapter(adapter);
-
 
     }
 
@@ -235,7 +248,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        String parent = currentDir.getParent() != null ? currentDir.getParent() : null;
+        String parent = currentDir.getParent();
         if (parent != null) {
             currentDir = new File(currentDir.getParent());
             fill(currentDir);
@@ -271,9 +284,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         Toast.makeText(getApplicationContext(), str, Toast.LENGTH_SHORT).show();
     }
-
-
-
 
 
 
@@ -352,7 +362,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 String file_Extension = "";
                 if (dotposition != -1) {
                     String filename_Without_Ext = fileName.substring(0, dotposition);
-                    file_Extension = fileName.substring(dotposition + 1, fileName.length());
+                    file_Extension = fileName.substring(dotposition + 1);
                 }
                 if (mimeType == null) {
                     mimeType = MimeUtils.guessMimeTypeFromExtension(file_Extension);
@@ -375,6 +385,170 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     }
+
+ public void deletedSelectedListItem(View view){
+     try {
+
+         for(int i=0;i<dir.size();i++){
+             if(dir.get(i).isSelect()){
+                 System.out.println("path "+ dir.get(i).getPath());
+               File file =  new File(dir.get(i).getPath());
+
+
+               if(file.isDirectory()){
+
+                  File[] files = file.listFiles();
+
+                  for(File f:files){
+
+                      f.delete();
+                      if(f.exists()){
+                          f.getCanonicalFile().delete();
+                          if(f.exists()){
+                              getApplicationContext().deleteFile(f.getName());
+                          }
+                      }
+
+                  }
+                  FileUtils.deleteDirectory(file);
+
+               }else {
+                   file.delete();
+                   if(file.exists()){
+                       file.getCanonicalFile().delete();
+                       if(file.exists()){
+                           getApplicationContext().deleteFile(file.getName());
+                       }
+                   }
+               }
+             }
+         }
+         removedSelectedListItem();
+     }
+     catch (Exception e) {
+         Log.e("tag", e.getMessage());
+     }
+ }
+
+
+ public void copyListItems(View view){
+     for(int i=0;i<dir.size();i++){
+         if(dir.get(i).isSelect()){
+             System.out.println("copy path "+ dir.get(i).getPath());
+             copiedItems.add(dir.get(i));
+         }
+     }
+     restoreList();
+ }
+
+
+
+    public void pasteListItems(View view) throws IOException {
+        if(copiedItems.size() > 0){
+            for(int i=0;i<copiedItems.size();i++){
+                copyFileOrDirectory(copiedItems.get(i).getPath(),currentDir.getAbsolutePath());
+            }
+            copiedItems = new ArrayList<>();
+            fill(currentDir);
+        }
+
+    }
+
+
+
+    public static void copyFileOrDirectory(String srcDir, String dstDir) {
+
+        try {
+            File src = new File(srcDir);
+            File dst = new File(dstDir, src.getName());
+
+            if (src.isDirectory()) {
+
+                String files[] = src.list();
+                int filesLength = files.length;
+                for (int i = 0; i < filesLength; i++) {
+                    String src1 = (new File(src, files[i]).getPath());
+                    String dst1 = dst.getPath();
+                    copyFileOrDirectory(src1, dst1);
+
+                }
+            } else {
+                copyFile(src, dst);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public static void copyFile(File sourceFile, File destFile) throws IOException {
+        if (!destFile.getParentFile().exists())
+            destFile.getParentFile().mkdirs();
+
+        if (!destFile.exists()) {
+            destFile.createNewFile();
+        }
+
+        FileChannel source = null;
+        FileChannel destination = null;
+
+        try {
+            source = new FileInputStream(sourceFile).getChannel();
+            destination = new FileOutputStream(destFile).getChannel();
+            destination.transferFrom(source, 0, source.size());
+        } finally {
+            if (source != null) {
+                source.close();
+            }
+            if (destination != null) {
+                destination.close();
+            }
+        }
+    }
+
+
+// used in delete list item methiod
+    private void removedSelectedListItem() {
+        ArrayList<Item> temp=new ArrayList<>();
+        try{
+            for(int i=0;i<dir.size();i++){
+                if(!dir.get(i).isSelect()){
+                    temp.add(dir.get(i));
+                }
+            }
+
+        }catch (Exception e){
+
+        }
+        dir=temp;
+        if(dir.size()==0){
+            recyclerView.setVisibility(View.GONE);
+        }
+        adapter.setModel(dir);
+        adapter.notifyDataSetChanged();
+    }
+
+
+    private void restoreList(){
+        try{
+            for(int i=0;i<dir.size();i++){
+                if(dir.get(i).isSelect()){
+                    dir.get(i).setSelect(false);
+                }
+            }
+
+        }catch (Exception e){
+
+        }
+        if(dir.size()==0){
+            recyclerView.setVisibility(View.GONE);
+        }
+        adapter.setModel(dir);
+        adapter.notifyDataSetChanged();
+    }
+
+
+
 }
 
 
