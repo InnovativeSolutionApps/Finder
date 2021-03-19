@@ -17,19 +17,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/header_title"
-                    android:layout_width="160dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:textStyle="bold"
+                    android:textColor="@color/purple_700"
+                    android:textSize="18dp"
                     android:text="Header" />
 
                 <EditText
-                    android:layout_width="70dp"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="search files." />
+                    android:hint="search by Name"
+                    android:id="@+id/searchFiles"
+                     />
 
 
             </LinearLayout>
@@ -186,6 +192,7 @@
                         android:layout_weight="1"
                         android:text="Delete"
                         android:textAllCaps="false"
+                        android:onClick="deletedSelectedListItem"
                         android:textSize="10dp" />
 
                     <Button
@@ -195,6 +202,7 @@
                         android:layout_weight="1"
                         android:text="Copy"
                         android:textAllCaps="false"
+                        android:onClick="copyListItems"
                         android:textSize="10dp" />
 
                     <Button
@@ -204,6 +212,7 @@
                         android:layout_weight="1"
                         android:text="Paste"
                         android:textAllCaps="false"
+                        android:onClick="pasteListItems"
                         android:textSize="10dp" />
 
 

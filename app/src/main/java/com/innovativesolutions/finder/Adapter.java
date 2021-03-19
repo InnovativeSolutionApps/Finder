@@ -58,7 +58,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
         if(model!=null){
 
-            System.out.println("Name : "+ model.getName());
+            //System.out.println("Name : "+ model.getName());
 
             viewHolder.text01.setText(model.getName());
             viewHolder.text02.setText(model.getData());
@@ -142,6 +142,10 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
     }
 
+
+    public void setModel(ArrayList<Item> models){
+        this.models=models;
+    }
 
     @Override
     public int getItemCount() {
