@@ -17,6 +17,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
+                android:background="#E2F0F7"
                 android:orientation="vertical">
 
                 <TextView
@@ -37,14 +38,25 @@
 
 
                     <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:textAlignment="center"
+                        android:cursorVisible="true"
                         android:hint="search by Name"
+                        android:background="@drawable/edit_flat_regular"
                         android:id="@+id/searchFiles"
                         />
 
-
+                        <Button
+                            android:layout_width="wrap_content"
+                            android:layout_weight="0"
+                            android:layout_height="wrap_content"
+                            android:onClick="clearSearchText"
+                            android:text="clear"
+                            android:id="@+id/clear_text"/>
 
                 </LinearLayout>
 
@@ -112,6 +124,9 @@
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerView"
+                    android:scrollbars="vertical"
+                    android:scrollbarThumbVertical="@color/purple_700"
+                    android:scrollbarSize="4dp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 

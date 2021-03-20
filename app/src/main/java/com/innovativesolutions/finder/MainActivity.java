@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private long timeStamp;
 
     RadioButton phone, sdcard;
-    RadioGroup radioGroup, listViewOptionRadioG;
+    RadioGroup radioGroup;
     TextView hearderTitle;
     EditText searchFilesEdit;
 
@@ -107,8 +107,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 
-        System.out.println(">>>> : "+ f3[0].toString());
-        System.out.println(">>>> : "+ f3[1].toString());
+//        System.out.println(">>>> : "+ f3[0].toString());
+//        System.out.println(">>>> : "+ f3[1].toString());
 
 
 
@@ -586,15 +586,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        String query = searchFilesEdit.getText().toString().toLowerCase();
-        searchFilesByName(query);
+
     }
 
     @Override
     public void afterTextChanged(Editable s) {
+        String query = searchFilesEdit.getText().toString().toLowerCase();
+        searchFilesByName(query);
     }
 
+public  void clearSearchText(View view){
+    searchFilesEdit.setText("");
 
+}
 
 
 }
