@@ -11,12 +11,12 @@
         android:orientation="vertical">
 
 
-
             <LinearLayout
                 android:id="@+id/search"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
+                android:background="#E2F0F7"
                 android:orientation="vertical">
 
                 <TextView
@@ -33,18 +33,32 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginBottom="3dp"
                     android:orientation="horizontal">
 
 
                     <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:textAlignment="center"
+                        android:cursorVisible="true"
                         android:hint="search by Name"
+                        android:background="@drawable/edit_flat_regular"
                         android:id="@+id/searchFiles"
                         />
 
-
+                        <ImageButton
+                            android:layout_width="wrap_content"
+                            android:layout_weight="0"
+                            android:layout_height="wrap_content"
+                            android:onClick="clearSearchText"
+                            android:background="#E2F0F7"
+                            android:text="clear"
+                            android:src="@drawable/ic_search_clear"
+                            android:id="@+id/clear_text"/>
 
                 </LinearLayout>
 
@@ -112,6 +126,9 @@
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerView"
+                    android:scrollbars="vertical"
+                    android:scrollbarThumbVertical="@color/purple_700"
+                    android:scrollbarSize="3dp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
@@ -126,9 +143,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#E2F0F7"
             android:layout_gravity="bottom"
             android:layout_weight="0"
+            android:layout_marginBottom="1dp"
+            android:background="@drawable/bottom_flat_regular"
             android:orientation="horizontal">
 
 
@@ -136,8 +154,10 @@
                 android:id="@+id/radioParent"
                 android:layout_width="70dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="13dp"
+                android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:orientation="horizontal">
 
 
@@ -184,6 +204,7 @@
                     android:id="@+id/controlls"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
                     android:layout_weight="3"
                     android:orientation="horizontal">
 
@@ -193,9 +214,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:text="Share"
-                        android:textAllCaps="false"
-                        android:textSize="10dp" />
+                        android:background="@drawable/ic_share"
+                        />
 
 
                     <Button
@@ -204,9 +224,8 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:onClick="createNewFolder"
-                        android:text="New Folder"
-                        android:textAllCaps="false"
-                        android:textSize="10dp" />
+                        android:background="@drawable/ic_newfolder"
+                        />
 
 
                     <Button
@@ -214,7 +233,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:text="Delete"
+                        android:background="@drawable/ic_delete"
                         android:textAllCaps="false"
                         android:onClick="deletedSelectedListItem"
                         android:textSize="10dp" />
@@ -224,20 +243,19 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:text="Copy"
-                        android:textAllCaps="false"
+                        android:padding="5dp"
+                        android:background="@drawable/ic_copy"
                         android:onClick="copyListItems"
-                        android:textSize="10dp" />
+                        />
 
                     <Button
                         android:id="@+id/paste"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:text="Paste"
-                        android:textAllCaps="false"
                         android:onClick="pasteListItems"
-                        android:textSize="10dp" />
+                        android:background="@drawable/ic_paste"
+                        />
 
 
                 </LinearLayout>

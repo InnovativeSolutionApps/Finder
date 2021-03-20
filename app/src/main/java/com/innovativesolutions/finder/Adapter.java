@@ -118,8 +118,6 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
                 Item model1=models.get(i);
 
-                System.out.println("22222"+ models.get(i).getName());
-
                 models.set(viewHolder.position,model1);
                 if(onClickListener!=null){
                     onClickListener.onClickListener(viewHolder.position,model1,"image");
