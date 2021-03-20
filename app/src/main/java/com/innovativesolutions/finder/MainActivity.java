@@ -18,7 +18,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -55,8 +57,10 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, Adapter.OnClickListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, Adapter.OnClickListener , TextWatcher {
 
     private static final int REQUEST_PATH = 1;
     GridView grid;
@@ -67,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     RadioButton phone, sdcard;
     RadioGroup radioGroup, listViewOptionRadioG;
     TextView hearderTitle;
-
+    EditText searchFilesEdit;
 
     private RecyclerView recyclerView=null;
     public Adapter adapter=null;
@@ -93,10 +97,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Header Tile
         hearderTitle = findViewById(R.id.header_title);
         hearderTitle.setText("Phone");
-       /* //  Grid view
-        grid = (GridView) findViewById(R.id.grid);
-        // LIst VIew
-        list = (ListView) findViewById(R.id.listView);*/
+
+        searchFilesEdit = findViewById(R.id.searchFiles);
+
+        searchFilesEdit.addTextChangedListener(this);
 
         // to know the file system path
         File[] f3 = getApplicationContext().getExternalFilesDirs(Environment.DIRECTORY_DOWNLOADS);
@@ -546,6 +550,50 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         adapter.setModel(dir);
         adapter.notifyDataSetChanged();
     }
+
+
+    public void searchFilesByName(String fName) {
+
+        String query = fName;
+        final Pattern patternFullMatch = Pattern.compile(query, Pattern.MULTILINE);
+        fill(currentDir);
+        if (query.length() > 0) {
+
+            ArrayList<Item> temp = new ArrayList<>();
+            try {
+                for (int i = 0; i < dir.size(); i++) {
+                    Matcher matcherFullMatch = patternFullMatch.matcher(dir.get(i).getName().toLowerCase());
+                    if (matcherFullMatch.find()) {
+                        temp.add(dir.get(i));
+                    }
+                }
+            } catch (Exception e) {
+
+            }
+            dir = temp;
+            adapter.setModel(dir);
+            adapter.notifyDataSetChanged();
+        } else {
+            Toast.makeText(getApplicationContext(), "Enter File Name...", Toast.LENGTH_SHORT).show();
+            fill(currentDir);
+        }
+    }
+
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        String query = searchFilesEdit.getText().toString().toLowerCase();
+        searchFilesByName(query);
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+    }
+
 
 
 
