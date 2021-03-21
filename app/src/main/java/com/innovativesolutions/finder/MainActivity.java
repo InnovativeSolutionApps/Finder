@@ -5,6 +5,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.ActionBar;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -25,6 +27,7 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -78,6 +81,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ArrayList<Item> dir;
 
     public   ArrayList<Item> copiedItems = new ArrayList<Item>();
+    public   ArrayList<Item> shareItems = new ArrayList<Item>();
+    public   ArrayList<Item> deleteItems = new ArrayList<Item>();
+
 
     public static final int STORAGE_PERMISSION_REQUEST_CODE= 1;
     public static final int STORAGE_PERMISSION_WRITE_REQUEST_CODE= 2;
@@ -430,14 +436,17 @@ private void askSDCardWritePermissions() {
 
 
 
-    public void createNewFolder(View view)
+    public void createNewFolder(View view1)
     {
 
+        LayoutInflater layoutInflater= MainActivity.this.getLayoutInflater();
+        final View view = layoutInflater.inflate(R.layout.dialog_group_name, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Title");
+        builder.setTitle("Enter Folder Name");
+        builder.setCancelable(false);
 
         // Set up the input
-        final EditText m_edtinput = new EditText(this);
+        final EditText m_edtinput = (EditText) view.findViewById(R.id.edt_groupName);
         // Specify the type of input expected;
         m_edtinput.setInputType(InputType.TYPE_CLASS_TEXT);
 
@@ -445,20 +454,24 @@ private void askSDCardWritePermissions() {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String m_text = " ";
-                m_text = m_edtinput.getText().toString();
 
+                String m_text = " ";
+                m_text = m_edtinput.getText().toString().trim();
                 Log.d("cur dir", currentDir.getAbsolutePath());
 
-                File m_newPath = new File(currentDir, m_text);
-                if (!m_newPath.exists()) {
-                    m_newPath.mkdirs();
+                if(m_text.length() > 0){
+                    File m_newPath = new File(currentDir, m_text);
+                    if (!m_newPath.exists()) {
+                        m_newPath.mkdirs();
+                    }else {
+                        // give toast folder already create with the name.
+                        Toast.makeText(getApplicationContext(), "Folder already creaetd.", Toast.LENGTH_SHORT).show();
+                    }
+                    fill(currentDir);
                 }else {
-                    // give toast folder already create with the name.
-                    Toast.makeText(getApplicationContext(), "Folder already creaetd.", Toast.LENGTH_SHORT).show();
-
+                    Toast.makeText(getApplicationContext(), "Please enter Folder name..", Toast.LENGTH_SHORT).show();
                 }
-                fill(currentDir);
+
             }
         });
 
@@ -469,7 +482,7 @@ private void askSDCardWritePermissions() {
             }
         });
 
-        builder.setView(m_edtinput);
+        builder.setView(view);
         builder.show();
     }
 
@@ -479,14 +492,19 @@ private void askSDCardWritePermissions() {
     @Override
     public void onClickListener(int position, Item model, String element) {
 
-        if(element == "textView"){
-            try{
-                dir.set(position,model);
-            }catch (Exception e){
+        com.innovativesolutions.finder.Item o = adapter.getItem(position);
 
+        if(element == "Itemview"){
+
+            if (!(o.getImage() == "directory_up")) {
+                try{
+                    dir.set(position,model);
+                }catch (Exception e){
+
+                }
             }
+
         }else if(element == "image"){
-            com.innovativesolutions.finder.Item o = adapter.getItem(position);
 
             if (o.getImage().equalsIgnoreCase("directory_icon") || o.getImage().equalsIgnoreCase("directory_up")) {
                 currentDir = new File(o.getPath());
@@ -508,7 +526,10 @@ private void askSDCardWritePermissions() {
 
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_VIEW);
-                intent.setDataAndType(Uri.parse("file://" + temp_file), mimeType);
+                intent.setFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                Uri uri = FileProvider.getUriForFile(MainActivity.this, BuildConfig.APPLICATION_ID + ".provider",temp_file);
+                intent.setDataAndType(uri, mimeType);
                 ResolveInfo info = getPackageManager().resolveActivity(intent,
                         PackageManager.MATCH_DEFAULT_ONLY);
                 if (info != null) {
@@ -526,42 +547,53 @@ private void askSDCardWritePermissions() {
 
  public void deletedSelectedListItem(View view){
      try {
-
          for(int i=0;i<dir.size();i++){
              if(dir.get(i).isSelect()){
-                 System.out.println("path "+ dir.get(i).getPath());
-               File file =  new File(dir.get(i).getPath());
-
-
-               if(file.isDirectory()){
-
-                  File[] files = file.listFiles();
-
-                  for(File f:files){
-
-                      f.delete();
-                      if(f.exists()){
-                          f.getCanonicalFile().delete();
-                          if(f.exists()){
-                              getApplicationContext().deleteFile(f.getName());
-                          }
-                      }
-
-                  }
-                  FileUtils.deleteDirectory(file);
-
-               }else {
-                   file.delete();
-                   if(file.exists()){
-                       file.getCanonicalFile().delete();
-                       if(file.exists()){
-                           getApplicationContext().deleteFile(file.getName());
-                       }
-                   }
-               }
+                 deleteItems.add(dir.get(i));
              }
          }
-         removedSelectedListItem();
+         if(deleteItems.size() > 0){
+             for(int i=0;i<dir.size();i++){
+                 if(dir.get(i).isSelect()){
+                     System.out.println("path "+ dir.get(i).getPath());
+                     File file =  new File(dir.get(i).getPath());
+
+                     if(file.isDirectory()){
+
+                         File[] files = file.listFiles();
+
+                         for(File f:files){
+
+                             f.delete();
+                             if(f.exists()){
+                                 f.getCanonicalFile().delete();
+                                 if(f.exists()){
+                                     getApplicationContext().deleteFile(f.getName());
+                                 }
+                             }
+
+                         }
+                         FileUtils.deleteDirectory(file);
+
+                     }else {
+                         file.delete();
+                         if(file.exists()){
+                             file.getCanonicalFile().delete();
+                             if(file.exists()){
+                                 getApplicationContext().deleteFile(file.getName());
+                             }
+                         }
+                     }
+                 }
+             }
+             removedSelectedListItem();
+             Toast.makeText(getApplicationContext(), "Deleted...", Toast.LENGTH_SHORT).show();
+
+         }else {
+             Toast.makeText(getApplicationContext(), "Selected Items : 0 ", Toast.LENGTH_SHORT).show();
+         }
+         deleteItems = new ArrayList<>();
+
      }
      catch (Exception e) {
          Log.e("tag", e.getMessage());
@@ -570,6 +602,7 @@ private void askSDCardWritePermissions() {
 
 
  public void copyListItems(View view){
+
      for(int i=0;i<dir.size();i++){
          if(dir.get(i).isSelect()){
              System.out.println("copy path "+ dir.get(i).getPath());
@@ -577,6 +610,12 @@ private void askSDCardWritePermissions() {
          }
      }
      restoreList();
+     if(copiedItems.size() > 0){
+         Toast.makeText(getApplicationContext(), "Copied...", Toast.LENGTH_SHORT).show();
+     }else {
+         Toast.makeText(getApplicationContext(), "Selected Items : 0 ", Toast.LENGTH_SHORT).show();
+     }
+
  }
 
 
@@ -588,6 +627,10 @@ private void askSDCardWritePermissions() {
             }
             copiedItems = new ArrayList<>();
             fill(currentDir);
+            Toast.makeText(getApplicationContext(), "Pasted...", Toast.LENGTH_SHORT).show();
+
+        }else {
+            Toast.makeText(getApplicationContext(), "Selected Items : 0 ", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -729,10 +772,67 @@ private void askSDCardWritePermissions() {
         searchFilesByName(query);
     }
 
-public  void clearSearchText(View view){
-    searchFilesEdit.setText("");
+    public void clearSearchText(View view) {
+        searchFilesEdit.setText("");
+    }
 
-}
+
+    public void shareFiles(View view){
+
+        ArrayList<Uri> uriList = new ArrayList<>();
+        for(int i=0;i<dir.size();i++){
+            if(dir.get(i).isSelect()){
+                System.out.println("share path "+ dir.get(i).getPath());
+                shareItems.add(dir.get(i));
+            }
+        }
+        restoreList();
+
+        if(shareItems.size() > 0){
+            // prepare for share
+            for (int i = 0; i < shareItems.size(); i++) {
+                Item o = shareItems.get(i);
+                if (o.getImage().equalsIgnoreCase("directory_icon") || o.getImage().equalsIgnoreCase("directory_up")) {
+                    File temp_file = new File(o.getPath());
+                    if(temp_file.isDirectory()){
+                        //Get all files in this particular location
+                        File[] filesToSend = temp_file.listFiles();
+                        ArrayList<Uri> files = new ArrayList<Uri>();
+                        for (File file : filesToSend) {
+                            //Uri uri = Uri.fromFile(file);
+                            Uri uri = FileProvider.getUriForFile(MainActivity.this, BuildConfig.APPLICATION_ID + ".provider",file);
+                            files.add(uri);
+                        }
+                        uriList.addAll(files);
+                    }
+                }else {
+                    File temp_file = new File(o.getPath());
+                    Uri uri = FileProvider.getUriForFile(MainActivity.this, BuildConfig.APPLICATION_ID + ".provider",temp_file);
+                    uriList.add(uri);
+                }
+            }
+
+            // intent
+            shareItems = new ArrayList<>();
+            Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+            intent.setFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.setType("*/*");
+            intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uriList);
+            startActivity(Intent.createChooser(intent, "Share Files"));
+
+        }else {
+            Toast.makeText(getApplicationContext(), "Selected Items : 0 ", Toast.LENGTH_SHORT).show();
+        }
+
+
+
+
+
+
+
+        }
+
 
 
 }

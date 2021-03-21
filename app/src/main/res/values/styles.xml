@@ -2,7 +2,7 @@
 <resources>
 
     <style name="NavStyle" parent="Base.TextAppearance.AppCompat">
-        <item name="android:textSize">10dp</item>
+        <item name="android:textSize">13dp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:padding">0dip</item>
