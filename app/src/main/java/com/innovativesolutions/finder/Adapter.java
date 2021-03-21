@@ -3,6 +3,7 @@ package com.innovativesolutions.finder;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,11 +59,12 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
         if(model!=null){
 
-            //System.out.println("Name : "+ model.getName());
+            System.out.println("model.getFileExt() "+ model.getFileExt());
 
             viewHolder.text01.setText(model.getName());
             viewHolder.text02.setText(model.getData());
             viewHolder.text03.setText(model.getDate());
+            viewHolder.textExt.setText(model.getFileExt());
             viewHolder.position=i;
 
 
@@ -170,9 +172,9 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         public TextView text01;
         public TextView text02;
         public TextView text03;
+        public TextView textExt;
         public View view;
         public int position;
-        public CheckBox checkBox;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -182,7 +184,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
             text01=itemView.findViewById(R.id.TextView01);
             text02=itemView.findViewById(R.id.TextView02);
             text03=itemView.findViewById(R.id.TextViewDate);
-            checkBox =itemView.findViewById(R.id.checkbox);
+            textExt=itemView.findViewById(R.id.TextViewExt);
         }
 
 
