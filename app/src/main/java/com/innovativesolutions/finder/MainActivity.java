@@ -278,10 +278,12 @@ private void askSDCardWritePermissions() {
 
     private void fill(File f) {
 
-        TextView absolutePath = findViewById(R.id.filePath);
+       // TextView absolutePath = findViewById(R.id.filePath);
+       // absolutePath.setText(" => : " + f.getAbsolutePath());
+
         File[] dirs = f.listFiles();
-        absolutePath.setText(" => : " + f.getAbsolutePath());
-           dir = new ArrayList<Item>();
+
+        dir = new ArrayList<Item>();
         List<com.innovativesolutions.finder.Item> fls = new ArrayList<com.innovativesolutions.finder.Item>();
         try {
             for (File ff : dirs) {
@@ -380,7 +382,7 @@ private void askSDCardWritePermissions() {
         } else if (id == R.id.music) {
             fetchSpecificSubDir("Music");
         } else if (id == R.id.videos) {
-            fetchSpecificSubDir("Vidoe");
+            fetchSpecificSubDir("Video");
         } else if (id == R.id.documents) {
             fetchSpecificSubDir("Documents");
         } else if (id == R.id.whatsapp) {

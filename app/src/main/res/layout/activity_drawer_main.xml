@@ -117,11 +117,11 @@
                 android:orientation="vertical">
 
 
-                <TextView
+        <!--        <TextView
                     android:id="@+id/filePath"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
-
+-->
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerView"
@@ -145,7 +145,7 @@
             android:layout_gravity="bottom"
             android:layout_margin="1dp"
             android:layout_weight="0"
-            android:background="@drawable/bottom_flat_regular"
+            android:background="#E2F0F7"
             android:orientation="horizontal">
 
 
