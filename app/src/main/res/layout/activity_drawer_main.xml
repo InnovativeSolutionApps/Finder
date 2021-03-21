@@ -11,73 +11,70 @@
         android:orientation="vertical">
 
 
+        <LinearLayout
+            android:id="@+id/search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:background="#E2F0F7"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/header_title"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:text="Header"
+                android:textColor="@color/black"
+                android:textSize="18dp"
+                android:textStyle="italic" />
+
+
             <LinearLayout
-                android:id="@+id/search"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:background="#E2F0F7"
-                android:orientation="vertical">
+                android:layout_height="match_parent"
+                android:layout_marginBottom="3dp"
+                android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/header_title"
+
+                <EditText
+                    android:id="@+id/searchFiles"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:textStyle="bold"
-                    android:textColor="@color/purple_700"
-                    android:textSize="18dp"
-                    android:text="Header" />
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/edit_flat_regular"
+                    android:cursorVisible="true"
+                    android:hint="Search by File Name"
+                    android:textAlignment="center" />
+
+                <ImageButton
+                    android:id="@+id/clear_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="0"
+                    android:background="#E2F0F7"
+                    android:onClick="clearSearchText"
+                    android:src="@drawable/ic_search_clear"
+                    android:text="clear" />
 
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="3dp"
-                    android:orientation="horizontal">
-
-
-                    <EditText
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-                        android:textAlignment="center"
-                        android:cursorVisible="true"
-                        android:hint="search by Name"
-                        android:background="@drawable/edit_flat_regular"
-                        android:id="@+id/searchFiles"
-                        />
-
-                        <ImageButton
-                            android:layout_width="wrap_content"
-                            android:layout_weight="0"
-                            android:layout_height="wrap_content"
-                            android:onClick="clearSearchText"
-                            android:background="#E2F0F7"
-                            android:text="clear"
-                            android:src="@drawable/ic_search_clear"
-                            android:id="@+id/clear_text"/>
-
-                </LinearLayout>
-
-
-
-
-
-
-
-
-
-
-
-
-
+                <Button
+                    android:id="@+id/delete"
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_bin"
+                    android:onClick="deletedSelectedListItem"
+                    android:textAllCaps="false" />
 
 
             </LinearLayout>
 
+
+        </LinearLayout>
 
 
         <LinearLayout
@@ -98,7 +95,7 @@
 
                 <com.google.android.material.navigation.NavigationView
                     android:id="@+id/nav_view"
-                    android:layout_width="90dp"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
                     android:background="#E2F0F7"
@@ -123,14 +120,13 @@
                     android:layout_height="wrap_content" />
 
 
-
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerView"
-                    android:scrollbars="vertical"
-                    android:scrollbarThumbVertical="@color/purple_700"
-                    android:scrollbarSize="3dp"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:scrollbarSize="3dp"
+                    android:scrollbarThumbVertical="@color/purple_700"
+                    android:scrollbars="vertical">
 
                 </androidx.recyclerview.widget.RecyclerView>
 
@@ -144,8 +140,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
+            android:layout_margin="1dp"
             android:layout_weight="0"
-            android:layout_marginBottom="1dp"
             android:background="@drawable/bottom_flat_regular"
             android:orientation="horizontal">
 
@@ -155,9 +151,8 @@
                 android:layout_width="70dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
                 android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
+                android:layout_marginRight="10dp"
                 android:orientation="horizontal">
 
 
@@ -171,14 +166,14 @@
 
                     <RadioButton
                         android:id="@+id/rPhone"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
+                        android:layout_marginBottom="8dp"
                         android:background="@drawable/radio_flat_selector"
                         android:button="@android:color/transparent"
                         android:onClick="onRadioButtonClicked"
-                        android:textAlignment="center"
-                        android:layout_width="match_parent"
                         android:text="Phone"
+                        android:textAlignment="center"
                         android:textColor="@drawable/radio_flat_text_selector" />
 
                     <RadioButton
@@ -188,8 +183,8 @@
                         android:background="@drawable/radio_flat_selector"
                         android:button="@android:color/transparent"
                         android:onClick="onRadioButtonClicked"
-                        android:textAlignment="center"
                         android:text="SD Card"
+                        android:textAlignment="center"
                         android:textColor="@drawable/radio_flat_text_selector" />
 
                 </RadioGroup>
@@ -198,67 +193,67 @@
             </LinearLayout>
 
 
+            <LinearLayout
+                android:id="@+id/controlls"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:layout_weight="3"
+                android:orientation="horizontal">
 
 
-                <LinearLayout
-                    android:id="@+id/controlls"
+                <Button
+                    android:id="@+id/share"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:layout_weight="3"
-                    android:orientation="horizontal">
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_flat_selector"
+                    android:onClick="shareFiles"
+                    android:text="Share"
+                    android:layout_margin="2dp"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/button_flat_text_selector" />
 
 
-                    <Button
-                        android:id="@+id/share"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@drawable/ic_share"
-                        />
+                <Button
+                    android:id="@+id/newfolder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_flat_selector"
+                    android:onClick="createNewFolder"
+                    android:text="New Folder"
+                    android:textAllCaps="false"
+                    android:layout_margin="2dp"
+                    android:textColor="@drawable/button_flat_text_selector"
+
+                    />
 
 
-                    <Button
-                        android:id="@+id/newfolder"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:onClick="createNewFolder"
-                        android:background="@drawable/ic_newfolder"
-                        />
+                <Button
+                    android:id="@+id/copy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_flat_selector"
+                    android:onClick="copyListItems"
+                    android:padding="5dp"
+                    android:text="Copy"
+                    android:layout_margin="2dp"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/button_flat_text_selector" />
 
-
-                    <Button
-                        android:id="@+id/delete"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@drawable/ic_delete"
-                        android:textAllCaps="false"
-                        android:onClick="deletedSelectedListItem"
-                        android:textSize="10dp" />
-
-                    <Button
-                        android:id="@+id/copy"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:padding="5dp"
-                        android:background="@drawable/ic_copy"
-                        android:onClick="copyListItems"
-                        />
-
-                    <Button
-                        android:id="@+id/paste"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:onClick="pasteListItems"
-                        android:background="@drawable/ic_paste"
-                        />
-
-
-                </LinearLayout>
+                <Button
+                    android:id="@+id/paste"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_flat_selector"
+                    android:onClick="pasteListItems"
+                    android:text="Paste"
+                    android:layout_margin="2dp"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/button_flat_text_selector" />
 
 
             </LinearLayout>
@@ -267,12 +262,7 @@
         </LinearLayout>
 
 
-
-
-
-
-
-
+    </LinearLayout>
 
 
 </RelativeLayout>

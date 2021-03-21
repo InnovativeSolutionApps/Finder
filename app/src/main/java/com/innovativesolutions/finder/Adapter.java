@@ -95,17 +95,21 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
             public void onClick(View v) {
 
                 Item model1=models.get(i);
-                if(model1.isSelect()){
-                    model1.setSelect(false);
 
-                }else{
-                    model1.setSelect(true);
+                System.out.println("models.get(i).getImage() :"+ models.get(i).getImage() +":");
+
+                if(!(models.get(i).getImage() == "directory_up")){
+                    if(model1.isSelect()){
+                        model1.setSelect(false);
+                    }else{
+                        model1.setSelect(true);
+                    }
+                    models.set(viewHolder.position,model1);
+                    if(onClickListener!=null){
+                        onClickListener.onClickListener(viewHolder.position,model1,"Itemview");
+                    }
+                    notifyItemChanged(viewHolder.position);
                 }
-                models.set(viewHolder.position,model1);
-                if(onClickListener!=null){
-                    onClickListener.onClickListener(viewHolder.position,model1,"checkbox");
-                }
-                notifyItemChanged(viewHolder.position);
 
             }
 
