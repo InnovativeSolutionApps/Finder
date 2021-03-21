@@ -68,11 +68,38 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
             viewHolder.position=i;
 
 
-              if(model.getName().contains(".jpg") || model.getName().contains(".png")){
+            if (model.getFileExt().toLowerCase().contains("jpg") || model.getFileExt().toLowerCase().contains("png")) {
                 Glide.with(mContext)
                         .load(new File(model.getPath()))
                         .centerCrop()
-                        .into( viewHolder.image);
+                        .into(viewHolder.image);
+
+            } else if (model.getFileExt().toLowerCase().contains("mp3")) {
+
+                String uri = "drawable/ic_mp3";
+                int imageResource = mContext.getResources().getIdentifier(uri, null, mContext.getPackageName());
+                Drawable image = mContext.getDrawable(imageResource);
+                viewHolder.image.setImageDrawable(image);
+
+            } else if (model.getFileExt().toLowerCase().contains("mp4")) {
+
+                String uri = "drawable/ic_mp4";
+                int imageResource = mContext.getResources().getIdentifier(uri, null, mContext.getPackageName());
+                Drawable image = mContext.getDrawable(imageResource);
+                viewHolder.image.setImageDrawable(image);
+
+            } else if (model.getFileExt().toLowerCase().contains("pdf")) {
+
+                String uri = "drawable/ic_pdf1";
+                int imageResource = mContext.getResources().getIdentifier(uri, null, mContext.getPackageName());
+                Drawable image = mContext.getDrawable(imageResource);
+                viewHolder.image.setImageDrawable(image);
+
+            } else if (model.getFileExt().toLowerCase().contains("apk")) {
+                String uri = "drawable/ic_apk";
+                int imageResource = mContext.getResources().getIdentifier(uri, null, mContext.getPackageName());
+                Drawable image = mContext.getDrawable(imageResource);
+                viewHolder.image.setImageDrawable(image);
 
             } else {
                 String uri = "drawable/" + model.getImage();
