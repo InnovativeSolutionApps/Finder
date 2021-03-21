@@ -35,6 +35,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ListView;
@@ -75,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     RadioGroup radioGroup;
     TextView hearderTitle;
     EditText searchFilesEdit;
+    CheckBox selectAllBox;
 
     private RecyclerView recyclerView=null;
     public Adapter adapter=null;
@@ -108,6 +110,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         hearderTitle.setText("Phone");
         searchFilesEdit = findViewById(R.id.searchFiles);
         searchFilesEdit.addTextChangedListener(this);
+        selectAllBox = findViewById(R.id.selectAll);
 
         // to know the file system path
         File[] f3 = getApplicationContext().getExternalFilesDirs(Environment.DIRECTORY_DOWNLOADS);
@@ -285,9 +288,18 @@ private void askSDCardWritePermissions() {
                 Date lastModDate = new Date(ff.lastModified());
                 DateFormat formater = DateFormat.getDateTimeInstance();
                 String date_modify = formater.format(lastModDate);
+
+                String fileName = ff.getName();
+                System.out.println("fileName >>>> "+ fileName);
+                int dotposition = fileName.lastIndexOf(".");
+                String file_Extension = "";
+                if (dotposition != -1) {
+                    file_Extension = fileName.substring(dotposition + 1);
+                }
+                System.out.println("file_Extension >>>> "+ file_Extension);
+
+
                 if (ff.isDirectory()) {
-
-
                     File[] fbuf = ff.listFiles();
                     int buf = 0;
                     if (fbuf != null) {
@@ -298,9 +310,9 @@ private void askSDCardWritePermissions() {
                     else num_item = num_item + " items";
 
                     //String formated = lastModDate.toString();
-                    dir.add(new com.innovativesolutions.finder.Item(ff.getName(), num_item, date_modify, ff.getAbsolutePath(), "directory_icon"));
+                    dir.add(new com.innovativesolutions.finder.Item(ff.getName(), num_item, date_modify, ff.getAbsolutePath(), "directory_icon",""));
                 } else {
-                    fls.add(new com.innovativesolutions.finder.Item(ff.getName(), convertByteToMb(ff.length()), date_modify, ff.getAbsolutePath(), "file_icon"));
+                    fls.add(new com.innovativesolutions.finder.Item(ff.getName(), convertByteToMb(ff.length()), date_modify, ff.getAbsolutePath(), "file_icon",file_Extension));
                 }
             }
         } catch (Exception e) {
@@ -310,7 +322,7 @@ private void askSDCardWritePermissions() {
         Collections.sort(fls);
         dir.addAll(fls);
         if (!f.getName().equalsIgnoreCase("sdcard"))
-            dir.add(0, new com.innovativesolutions.finder.Item("..", "Parent Directory", "", f.getParent(), "directory_up"));
+            dir.add(0, new com.innovativesolutions.finder.Item("..", "Parent Directory", "", f.getParent(), "directory_up",""));
 
             recyclerView=(RecyclerView)findViewById(R.id.recyclerView);
             RecyclerView.LayoutManager manager=new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
@@ -513,6 +525,7 @@ private void askSDCardWritePermissions() {
                 File temp_file = new File(o.getPath());
                 String mimeType = MediaFile.getMimeTypeForFile(temp_file.toString()); //getContentResolver().getType(Uri.parse("file://" + temp_file));
 
+
                 String fileName = temp_file.getName();
                 int dotposition = fileName.lastIndexOf(".");
                 String file_Extension = "";
@@ -520,6 +533,8 @@ private void askSDCardWritePermissions() {
                     String filename_Without_Ext = fileName.substring(0, dotposition);
                     file_Extension = fileName.substring(dotposition + 1);
                 }
+
+
                 if (mimeType == null) {
                     mimeType = MimeUtils.guessMimeTypeFromExtension(file_Extension);
                 }
@@ -825,15 +840,41 @@ private void askSDCardWritePermissions() {
             Toast.makeText(getApplicationContext(), "Selected Items : 0 ", Toast.LENGTH_SHORT).show();
         }
 
-
-
-
-
-
-
         }
 
+        public void onAllCheckboxClicked(View view){
+            try{
+                if(!selectAllBox.isChecked()){
+                    for(int i=0;i<dir.size();i++){
 
+                        Item o = dir.get(i);
+                        if (!(o.getImage() == "directory_up")) {
+
+                            if (dir.get(i).isSelect()) {
+                                dir.get(i).setSelect(false);
+                            }
+
+                        }
+                    }
+                } else{
+                    for(int i=0;i<dir.size();i++){
+
+                        Item o = dir.get(i);
+                        if (!(o.getImage() == "directory_up")) {
+                            if (!dir.get(i).isSelect()) {
+                                dir.get(i).setSelect(true);
+                            }
+                        }
+                    }
+                }
+            }catch (Exception e){
+            }
+            if(dir.size()==0){
+                recyclerView.setVisibility(View.GONE);
+            }
+            adapter.setModel(dir);
+            adapter.notifyDataSetChanged();
+        }
 
 }
 

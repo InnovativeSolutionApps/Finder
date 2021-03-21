@@ -6,6 +6,15 @@ public class Item implements Comparable<Item>{
 	private String date;
 	private String path;
 	private String image;
+	private String fileExt;
+
+	public String getFileExt() {
+		return fileExt;
+	}
+
+	public void setFileExt(String fileExt) {
+		this.fileExt = fileExt;
+	}
 
 	public boolean isSelect() {
 		return isSelect;
@@ -43,13 +52,14 @@ public class Item implements Comparable<Item>{
 
 
 
-	public Item(String n, String d, String dt, String p, String img)
+	public Item(String n, String d, String dt, String p, String img, String ext)
 	{
 		name = n;
 		data = d;
 		date = dt;
 		path = p; 
 		image = img;
+		fileExt = ext;
 		
 	}
 	public String getName()
