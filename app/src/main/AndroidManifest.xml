@@ -50,7 +50,7 @@
 
         <activity
             android:name=".MainActivity"
-            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:windowSoftInputMode="stateHidden|adjustPan"
             android:configChanges="orientation|screenSize"
            >
 

@@ -6,6 +6,10 @@
         >
 
         <item
+            android:id="@+id/phone"
+            android:title="Phone" />
+
+        <item
             android:id="@+id/whatsapp"
             android:title="WhatsApp" />
 

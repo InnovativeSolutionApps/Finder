@@ -24,7 +24,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
 
     public interface OnClickListener{
-        void onClickListener(int position,Item model,String element);
+        void onClickListener(int position,Item model,String element, ArrayList<Item> models);
     }
 
 
@@ -125,7 +125,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
                 Item model1=models.get(i);
 
-                System.out.println("models.get(i).getImage() :"+ models.get(i).getImage() +":");
+               // System.out.println("models.get(i).getImage() :"+ models.get(i).getImage() +":");
 
                 if(!(models.get(i).getImage() == "directory_up")){
                     if(model1.isSelect()){
@@ -135,7 +135,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
                     }
                     models.set(viewHolder.position,model1);
                     if(onClickListener!=null){
-                        onClickListener.onClickListener(viewHolder.position,model1,"Itemview");
+                        onClickListener.onClickListener(viewHolder.position,model1,"Itemview",models);
                     }
                     notifyItemChanged(viewHolder.position);
                 }
@@ -153,7 +153,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
                 models.set(viewHolder.position,model1);
                 if(onClickListener!=null){
-                    onClickListener.onClickListener(viewHolder.position,model1,"image");
+                    onClickListener.onClickListener(viewHolder.position,model1,"image",models);
                 }
                 notifyItemChanged(viewHolder.position);
 
@@ -167,11 +167,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
     }
 
-    private void onClickLogic(){
 
-
-
-    }
 
 
     public void setModel(ArrayList<Item> models){
