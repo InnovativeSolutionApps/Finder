@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,8 +19,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="0"
             android:layout_marginLeft="1dp"
+            android:background="#E2F0F7"
             android:layout_marginRight="1dp"
-            android:background="@drawable/bottom_flat_regular"
             android:orientation="vertical">
 
             <TextView
@@ -40,6 +42,14 @@
                 android:orientation="horizontal">
 
 
+               <LinearLayout
+                   android:layout_width="wrap_content"
+                   android:layout_height="match_parent"
+                   android:background="@drawable/edit_flat_regular"
+                   android:layout_weight="1"
+                   android:orientation="horizontal">
+
+
                 <EditText
                     android:id="@+id/searchFiles"
                     android:layout_width="wrap_content"
@@ -47,28 +57,33 @@
                     android:layout_gravity="center"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:layout_weight="1"
                     android:background="@drawable/edit_flat_regular"
+                    android:layout_weight="1"
+                    android:maxLines="1"
                     android:cursorVisible="true"
                     android:hint="Search by File Name"
                     android:textAlignment="center" />
 
-                <ImageButton
-                    android:id="@+id/clear_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="0"
-                    android:background="#E2F0F7"
-                    android:onClick="clearSearchText"
-                    android:src="@drawable/ic_search_clear"
-                    android:text="clear" />
+                   <ImageButton
+                       android:id="@+id/clear_text"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_gravity="center"
+                       android:layout_weight="0"
+                       android:layout_marginRight="4dp"
+                       android:background="#fff"
+                       android:onClick="clearSearchText"
+                       android:src="@drawable/ic_search_clear"
+                       android:text="clear" />
+
+            </LinearLayout>
 
 
                 <Button
                     android:id="@+id/delete"
-                    android:layout_width="40dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="0"
                     android:background="@drawable/ic_bin"
                     android:onClick="deletedSelectedListItem"
                     android:textAllCaps="false" />
@@ -100,7 +115,6 @@
                     android:id="@+id/nav_view"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="start"
                     android:background="#E2F0F7"
                     android:fitsSystemWindows="true"
                     app:itemIconPadding="0dp"
@@ -109,7 +123,6 @@
 
             </LinearLayout>
 
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -117,17 +130,44 @@
                 android:orientation="vertical">
 
 
-        <!--        <TextView
-                    android:id="@+id/filePath"
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
--->
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/filePath"
+                        android:layout_width="wrap_content"
+                        android:background="#E2F0F7"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:layout_height="wrap_content" />
+
+
+                    <TextView
+                        android:id="@+id/itemCountAll"
+                        android:layout_width="wrap_content"
+                        android:layout_weight="0"
+                        android:background="@drawable/radio_flat_regular"
+                        android:gravity="center"
+                        android:layout_height="wrap_content" />
+
+
+
+                </LinearLayout>
+
+
+
+
+
+
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:scrollbarSize="3dp"
+                    android:scrollbarSize="4dp"
                     android:scrollbarThumbVertical="@color/purple_700"
                     android:scrollbars="vertical">
 
@@ -280,6 +320,7 @@
 
 
     </LinearLayout>
+
 
 
 </RelativeLayout>

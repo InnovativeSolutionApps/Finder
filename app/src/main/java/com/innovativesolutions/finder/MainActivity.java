@@ -6,21 +6,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.Manifest;
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.Editable;
@@ -30,33 +24,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.GridView;
-import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.material.navigation.NavigationView;
 import com.innovativesolutions.finder.fileUtil.MediaFile;
 import com.innovativesolutions.finder.fileUtil.MimeUtils;
-
 import org.apache.commons.io.FileUtils;
-
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.channels.FileChannel;
 import java.sql.Date;
 import java.text.DateFormat;
@@ -75,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     RadioButton phone, sdcard;
     RadioGroup radioGroup;
     TextView hearderTitle;
+    public  TextView itemCountView;
     EditText searchFilesEdit;
     CheckBox selectAllBox;
 
@@ -111,6 +93,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         searchFilesEdit = findViewById(R.id.searchFiles);
         searchFilesEdit.addTextChangedListener(this);
         selectAllBox = findViewById(R.id.selectAll);
+        itemCountView = findViewById(R.id.itemCountAll);
+
 
         // to know the file system path
         File[] f3 = getApplicationContext().getExternalFilesDirs(Environment.DIRECTORY_DOWNLOADS);
@@ -131,17 +115,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 
-
-
-
-
-
-
-        // set phone storage on app firt time launches
         currentDir = new File("/storage/emulated/0/");
-
-        //fill(currentDir);
-
 
         askSDCardReadPermissions();
         askSDCardWritePermissions();
@@ -207,7 +181,7 @@ private void askSDCardWritePermissions() {
     // we already asked for permisson & Permission granted
     if (permissionCheckStorage == PackageManager.PERMISSION_GRANTED) {
         //do what you want
-
+            System.out.println("111111111111111");
     } else {
 
         // if storage request is denied
@@ -278,8 +252,8 @@ private void askSDCardWritePermissions() {
 
     private void fill(File f) {
 
-       // TextView absolutePath = findViewById(R.id.filePath);
-       // absolutePath.setText(" => : " + f.getAbsolutePath());
+        TextView absolutePath = findViewById(R.id.filePath);
+        absolutePath.setText(" : " + f.getAbsolutePath());
 
         File[] dirs = f.listFiles();
 
@@ -388,6 +362,11 @@ private void askSDCardWritePermissions() {
         } else if (id == R.id.whatsapp) {
             fetchSpecificSubDir("WhatsApp/Media");
         }
+        else if (id == R.id.phone) {
+            currentDir = new File("/storage/emulated/0/");
+            hearderTitle.setText("Phone");
+            fill(currentDir);
+        }
 
 
         return true;
@@ -410,6 +389,8 @@ private void askSDCardWritePermissions() {
 
     @Override
     public void onBackPressed() {
+
+        itemCountView.setText( "0 of 0" );
         String parent = currentDir.getParent();
         if (parent != null) {
             currentDir = new File(currentDir.getParent());
@@ -504,17 +485,26 @@ private void askSDCardWritePermissions() {
 
 
     @Override
-    public void onClickListener(int position, Item model, String element) {
+    public void onClickListener(int position, Item model, String element,ArrayList<Item> models) {
+           ArrayList<Item> items = new ArrayList<Item>();
 
         com.innovativesolutions.finder.Item o = adapter.getItem(position);
 
         if(element == "Itemview"){
 
+            for(int i=0;i<models.size();i++){
+                if(models.get(i).isSelect()){
+                    items.add(models.get(i));
+                }
+            }
+            System.out.println(models.size() );
+            System.out.println(items.size());
+            itemCountView.setText(  Integer.toString(items.size()) + " of " + Integer.toString(models.size() - 1));
+
             if (!(o.getImage() == "directory_up")) {
                 try{
                     dir.set(position,model);
                 }catch (Exception e){
-
                 }
             }
 
@@ -522,6 +512,7 @@ private void askSDCardWritePermissions() {
 
             if (o.getImage().equalsIgnoreCase("directory_icon") || o.getImage().equalsIgnoreCase("directory_up")) {
                 currentDir = new File(o.getPath());
+                itemCountView.setText( "0 of 0" );
                 fill(currentDir);
             } else {
                 File temp_file = new File(o.getPath());
@@ -683,9 +674,9 @@ private void askSDCardWritePermissions() {
         if (!destFile.getParentFile().exists())
             destFile.getParentFile().mkdirs();
 
-//        if (!destFile.exists()) {
-//            destFile.createNewFile();
-//        }
+        if (!destFile.exists()) {
+           destFile.createNewFile();
+        }
 
         FileChannel source = null;
         FileChannel destination = null;
@@ -858,6 +849,7 @@ private void askSDCardWritePermissions() {
 
                         }
                     }
+                    itemCountView.setText( "0 of 0" );
                 } else{
                     for(int i=0;i<dir.size();i++){
 
@@ -868,6 +860,7 @@ private void askSDCardWritePermissions() {
                             }
                         }
                     }
+                    itemCountView.setText(Integer.toString(dir.size() - 1) + " of " + Integer.toString(dir.size() - 1));
                 }
             }catch (Exception e){
             }
