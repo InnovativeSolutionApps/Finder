@@ -59,7 +59,6 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
         if(model!=null){
 
-            System.out.println("model.getFileExt() "+ model.getFileExt());
 
             viewHolder.text01.setText(model.getName());
             viewHolder.text02.setText(model.getData());
@@ -83,10 +82,17 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
             } else if (model.getFileExt().toLowerCase().contains("mp4")) {
 
-                String uri = "drawable/ic_mp4";
-                int imageResource = mContext.getResources().getIdentifier(uri, null, mContext.getPackageName());
-                Drawable image = mContext.getDrawable(imageResource);
-                viewHolder.image.setImageDrawable(image);
+                try {
+                    Glide.with(mContext)
+                            .load(new File(model.getPath()))
+                            .centerCrop()
+                            .into(viewHolder.image);
+                } catch (Exception c) {
+                    String uri = "drawable/ic_mp4";
+                    int imageResource = mContext.getResources().getIdentifier(uri, null, mContext.getPackageName());
+                    Drawable image = mContext.getDrawable(imageResource);
+                    viewHolder.image.setImageDrawable(image);
+                }
 
             } else if (model.getFileExt().toLowerCase().contains("pdf")) {
 
@@ -101,7 +107,37 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
                 Drawable image = mContext.getDrawable(imageResource);
                 viewHolder.image.setImageDrawable(image);
 
-            } else {
+            }  else if (model.getFileExt().toLowerCase().contains("doc")) {
+
+                String uri = "drawable/ic_doc";
+                int imageResource = mContext.getResources().getIdentifier(uri, null, mContext.getPackageName());
+                Drawable image = mContext.getDrawable(imageResource);
+                viewHolder.image.setImageDrawable(image);
+
+            }else if(model.getFileExt().toLowerCase().contains("gif") || model.getFileExt().toLowerCase().contains("jpeg")){
+
+                try {
+                    Glide.with(mContext)
+                            .load(new File(model.getPath()))
+                            .centerCrop()
+                            .into(viewHolder.image);
+                } catch (Exception c) {
+                    String uri = "drawable/ic_mp4";
+                    int imageResource = mContext.getResources().getIdentifier(uri, null, mContext.getPackageName());
+                    Drawable image = mContext.getDrawable(imageResource);
+                    viewHolder.image.setImageDrawable(image);
+                }
+            }
+            else if (model.getFileExt().toLowerCase().contains("xlsx")) {
+
+                String uri = "drawable/ic_xlsx";
+                int imageResource = mContext.getResources().getIdentifier(uri, null, mContext.getPackageName());
+                Drawable image = mContext.getDrawable(imageResource);
+                viewHolder.image.setImageDrawable(image);
+
+            }
+
+        else {
                 String uri = "drawable/" + model.getImage();
                 int imageResource = mContext.getResources().getIdentifier(uri, null, mContext.getPackageName());
                 Drawable image = mContext.getDrawable(imageResource);
@@ -124,8 +160,6 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
             public void onClick(View v) {
 
                 Item model1=models.get(i);
-
-               // System.out.println("models.get(i).getImage() :"+ models.get(i).getImage() +":");
 
                 if(!(models.get(i).getImage() == "directory_up")){
                     if(model1.isSelect()){

@@ -64,9 +64,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public Adapter adapter=null;
     private ArrayList<Item> dir;
 
-    public   ArrayList<Item> copiedItems = new ArrayList<Item>();
-    public   ArrayList<Item> shareItems = new ArrayList<Item>();
-    public   ArrayList<Item> deleteItems = new ArrayList<Item>();
+    public   ArrayList<Item> copiedItems = new ArrayList<>();
+    public   ArrayList<Item> shareItems = new ArrayList<>();
+    public   ArrayList<Item> deleteItems = new ArrayList<>();
 
 
     public static final int STORAGE_PERMISSION_REQUEST_CODE= 1;
@@ -94,26 +94,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         searchFilesEdit.addTextChangedListener(this);
         selectAllBox = findViewById(R.id.selectAll);
         itemCountView = findViewById(R.id.itemCountAll);
-
-
-        // to know the file system path
-        File[] f3 = getApplicationContext().getExternalFilesDirs(Environment.DIRECTORY_DOWNLOADS);
-
-        String state = Environment.getExternalStorageState();
-        File external_m2 =  getExternalFilesDir(null);
-        File external_m2_Args = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File[] external_AND_removable_storage_m1_Args = getExternalFilesDirs(Environment.DIRECTORY_PICTURES);
-
-        System.out.println("SIZE : " + f3.length);
-        System.out.println("state : "+ state);
-        System.out.println("external_m2 "+ external_m2);
-        System.out.println("external_m2_Args "+ external_m2_Args);
-        System.out.println("external_AND_removable_storage_m1_Args :" + external_AND_removable_storage_m1_Args.length);
-        System.out.println("external_AND_removable_storage_m1_Args1 :" + external_AND_removable_storage_m1_Args[0]);
-//        System.out.println("external_AND_removable_storage_m1_Args2 :" + external_AND_removable_storage_m1_Args[1]);
-
-
-
 
         currentDir = new File("/storage/emulated/0/");
 
@@ -181,7 +161,6 @@ private void askSDCardWritePermissions() {
     // we already asked for permisson & Permission granted
     if (permissionCheckStorage == PackageManager.PERMISSION_GRANTED) {
         //do what you want
-            System.out.println("111111111111111");
     } else {
 
         // if storage request is denied
@@ -266,13 +245,11 @@ private void askSDCardWritePermissions() {
                 String date_modify = formater.format(lastModDate);
 
                 String fileName = ff.getName();
-                System.out.println("fileName >>>> "+ fileName);
                 int dotposition = fileName.lastIndexOf(".");
                 String file_Extension = "";
                 if (dotposition != -1) {
                     file_Extension = fileName.substring(dotposition + 1);
                 }
-                System.out.println("file_Extension >>>> "+ file_Extension);
 
 
                 if (ff.isDirectory()) {
@@ -497,8 +474,6 @@ private void askSDCardWritePermissions() {
                     items.add(models.get(i));
                 }
             }
-            System.out.println(models.size() );
-            System.out.println(items.size());
             itemCountView.setText(  Integer.toString(items.size()) + " of " + Integer.toString(models.size() - 1));
 
             if (!(o.getImage() == "directory_up")) {
@@ -554,6 +529,7 @@ private void askSDCardWritePermissions() {
     }
 
  public void deletedSelectedListItem(View view){
+     itemCountView.setText( "0 of 0" );
      try {
          for(int i=0;i<dir.size();i++){
              if(dir.get(i).isSelect()){
@@ -563,7 +539,6 @@ private void askSDCardWritePermissions() {
          if(deleteItems.size() > 0){
              for(int i=0;i<dir.size();i++){
                  if(dir.get(i).isSelect()){
-                     System.out.println("path "+ dir.get(i).getPath());
                      File file =  new File(dir.get(i).getPath());
 
                      if(file.isDirectory()){
@@ -610,10 +585,9 @@ private void askSDCardWritePermissions() {
 
 
  public void copyListItems(View view){
-
+     itemCountView.setText( "0 of 0" );
      for(int i=0;i<dir.size();i++){
          if(dir.get(i).isSelect()){
-             System.out.println("copy path "+ dir.get(i).getPath());
              copiedItems.add(dir.get(i));
          }
      }
@@ -674,9 +648,9 @@ private void askSDCardWritePermissions() {
         if (!destFile.getParentFile().exists())
             destFile.getParentFile().mkdirs();
 
-        if (!destFile.exists()) {
-           destFile.createNewFile();
-        }
+     //   if (!destFile.exists()) {
+//           destFile.createNewFile();
+    //    }
 
         FileChannel source = null;
         FileChannel destination = null;
@@ -790,7 +764,6 @@ private void askSDCardWritePermissions() {
         ArrayList<Uri> uriList = new ArrayList<>();
         for(int i=0;i<dir.size();i++){
             if(dir.get(i).isSelect()){
-                System.out.println("share path "+ dir.get(i).getPath());
                 shareItems.add(dir.get(i));
             }
         }
