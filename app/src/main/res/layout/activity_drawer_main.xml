@@ -17,10 +17,10 @@
             android:id="@+id/search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0"
             android:layout_marginLeft="1dp"
-            android:background="#E2F0F7"
             android:layout_marginRight="1dp"
+            android:layout_weight="0"
+            android:background="#E2F0F7"
             android:orientation="vertical">
 
             <TextView
@@ -37,46 +37,46 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginRight="1dp"
                 android:layout_marginLeft="1dp"
+                android:layout_marginRight="1dp"
                 android:orientation="horizontal">
 
 
-               <LinearLayout
-                   android:layout_width="wrap_content"
-                   android:layout_height="match_parent"
-                   android:background="@drawable/edit_flat_regular"
-                   android:layout_weight="1"
-                   android:orientation="horizontal">
-
-
-                <EditText
-                    android:id="@+id/searchFiles"
+                <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:background="@drawable/edit_flat_regular"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:maxLines="1"
-                    android:cursorVisible="true"
-                    android:hint="Search by File Name"
-                    android:textAlignment="center" />
+                    android:background="@drawable/edit_flat_regular"
+                    android:orientation="horizontal">
 
-                   <ImageButton
-                       android:id="@+id/clear_text"
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:layout_gravity="center"
-                       android:layout_weight="0"
-                       android:layout_marginRight="4dp"
-                       android:background="#fff"
-                       android:onClick="clearSearchText"
-                       android:src="@drawable/ic_search_clear"
-                       android:text="clear" />
 
-            </LinearLayout>
+                    <EditText
+                        android:id="@+id/searchFiles"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/edit_flat_regular"
+                        android:cursorVisible="true"
+                        android:hint="Search by File Name"
+                        android:maxLines="1"
+                        android:textAlignment="center" />
+
+                    <ImageButton
+                        android:id="@+id/clear_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="4dp"
+                        android:layout_weight="0"
+                        android:background="#fff"
+                        android:onClick="clearSearchText"
+                        android:src="@drawable/ic_search_clear"
+                        android:text="clear" />
+
+                </LinearLayout>
 
 
                 <Button
@@ -129,8 +129,6 @@
                 android:background="@color/white"
                 android:orientation="vertical">
 
-
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -139,28 +137,22 @@
                     <TextView
                         android:id="@+id/filePath"
                         android:layout_width="wrap_content"
-                        android:background="#E2F0F7"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:gravity="center"
-                        android:layout_height="wrap_content" />
+                        android:background="#E2F0F7"
+                        android:gravity="center" />
 
 
                     <TextView
                         android:id="@+id/itemCountAll"
                         android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_weight="0"
                         android:background="@drawable/radio_flat_regular"
-                        android:gravity="center"
-                        android:layout_height="wrap_content" />
-
+                        android:gravity="center" />
 
 
                 </LinearLayout>
-
-
-
-
-
 
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -245,29 +237,27 @@
                 android:orientation="horizontal">
 
                 <CheckBox
+                    android:id="@+id/selectAll"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="All"
                     android:layout_gravity="start"
-                    android:id="@+id/selectAll"
                     android:layout_margin="2dp"
                     android:background="@drawable/button_flat_selector"
-                    android:textColor="@drawable/button_flat_text_selector"
-                    android:textAllCaps="false"
                     android:onClick="onAllCheckboxClicked"
-                    />
-
+                    android:text="All"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/button_flat_text_selector" />
 
 
                 <Button
                     android:id="@+id/share"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_margin="2dp"
                     android:layout_weight="1"
                     android:background="@drawable/button_flat_selector"
                     android:onClick="shareFiles"
                     android:text="Share"
-                    android:layout_margin="2dp"
                     android:textAllCaps="false"
                     android:textColor="@drawable/button_flat_text_selector" />
 
@@ -276,14 +266,13 @@
                     android:id="@+id/newfolder"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_margin="2dp"
                     android:layout_weight="1"
                     android:background="@drawable/button_flat_selector"
                     android:onClick="createNewFolder"
                     android:text="New Folder"
                     android:textAllCaps="false"
-                    android:layout_margin="2dp"
                     android:textColor="@drawable/button_flat_text_selector"
-
                     />
 
 
@@ -291,12 +280,12 @@
                     android:id="@+id/copy"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_margin="2dp"
                     android:layout_weight="1"
                     android:background="@drawable/button_flat_selector"
                     android:onClick="copyListItems"
                     android:padding="5dp"
                     android:text="Copy"
-                    android:layout_margin="2dp"
                     android:textAllCaps="false"
                     android:textColor="@drawable/button_flat_text_selector" />
 
@@ -304,11 +293,11 @@
                     android:id="@+id/paste"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_margin="2dp"
                     android:layout_weight="1"
                     android:background="@drawable/button_flat_selector"
                     android:onClick="pasteListItems"
                     android:text="Paste"
-                    android:layout_margin="2dp"
                     android:textAllCaps="false"
                     android:textColor="@drawable/button_flat_text_selector" />
 
@@ -320,7 +309,6 @@
 
 
     </LinearLayout>
-
 
 
 </RelativeLayout>
