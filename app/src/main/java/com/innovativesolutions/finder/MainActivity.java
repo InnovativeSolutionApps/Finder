@@ -64,9 +64,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public Adapter adapter=null;
     private ArrayList<Item> dir;
 
-    public   ArrayList<Item> copiedItems = new ArrayList<>();
-    public   ArrayList<Item> shareItems = new ArrayList<>();
-    public   ArrayList<Item> deleteItems = new ArrayList<>();
+    public ArrayList<Item> copiedItems = new ArrayList<>();
+    public ArrayList<Item> shareItems = new ArrayList<>();
+    public ArrayList<Item> deleteItems = new ArrayList<>();
 
 
     public static final int STORAGE_PERMISSION_REQUEST_CODE= 1;
@@ -114,6 +114,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (permissionCheckStorage == PackageManager.PERMISSION_GRANTED) {
             //do what you want
             fill(currentDir);
+            //System.out.println("??????? GIven : READ_EXTERNAL_STORAGE ");
 
         } else {
             // if storage request is denied
@@ -161,6 +162,8 @@ private void askSDCardWritePermissions() {
     // we already asked for permisson & Permission granted
     if (permissionCheckStorage == PackageManager.PERMISSION_GRANTED) {
         //do what you want
+       // System.out.println("??????? GIven : WRITE_EXTERNAL_STORAGE ");
+
     } else {
 
         // if storage request is denied
@@ -209,7 +212,7 @@ private void askSDCardWritePermissions() {
                     // check whether storage permission granted or not.
                     if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                         //do what you want;
-                        System.out.println("#######READ#######");
+                        //System.out.println("#######READ#######");
                     }
                 }
                 break;
@@ -218,7 +221,7 @@ private void askSDCardWritePermissions() {
                     // check whether storage permission granted or not.
                     if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                         //do what you want;
-                        System.out.println("######WRITE########");
+                        //System.out.println("######WRITE########");
                     }
                 }
                 break;
@@ -236,7 +239,7 @@ private void askSDCardWritePermissions() {
 
         File[] dirs = f.listFiles();
 
-        dir = new ArrayList<Item>();
+        dir = new ArrayList<>();
         List<com.innovativesolutions.finder.Item> fls = new ArrayList<com.innovativesolutions.finder.Item>();
         try {
             for (File ff : dirs) {
@@ -323,23 +326,32 @@ private void askSDCardWritePermissions() {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         if (id == R.id.download) {
+            itemCountView.setText( "0 of 0" );
             fetchSpecificSubDir("Download");
         } else if (id == R.id.camera) {
+            itemCountView.setText( "0 of 0" );
             fetchSpecificSubDir("DCIM");
         } else if (id == R.id.screenshot) {
+            itemCountView.setText( "0 of 0" );
             fetchSpecificSubDir("Screenshot");
         } else if (id == R.id.pictures) {
+            itemCountView.setText( "0 of 0" );
             fetchSpecificSubDir("Pictures");
         } else if (id == R.id.music) {
+            itemCountView.setText( "0 of 0" );
             fetchSpecificSubDir("Music");
         } else if (id == R.id.videos) {
+            itemCountView.setText( "0 of 0" );
             fetchSpecificSubDir("Video");
         } else if (id == R.id.documents) {
+            itemCountView.setText( "0 of 0" );
             fetchSpecificSubDir("Documents");
         } else if (id == R.id.whatsapp) {
+            itemCountView.setText( "0 of 0" );
             fetchSpecificSubDir("WhatsApp/Media");
         }
         else if (id == R.id.phone) {
+            itemCountView.setText( "0 of 0" );
             currentDir = new File("/storage/emulated/0/");
             hearderTitle.setText("Phone");
             fill(currentDir);
@@ -626,14 +638,12 @@ private void askSDCardWritePermissions() {
             File dst = new File(dstDir, src.getName());
 
             if (src.isDirectory()) {
-
                 String files[] = src.list();
                 int filesLength = files.length;
                 for (int i = 0; i < filesLength; i++) {
                     String src1 = (new File(src, files[i]).getPath());
                     String dst1 = dst.getPath();
                     copyFileOrDirectory(src1, dst1);
-
                 }
             } else {
                 copyFile(src, dst);
@@ -845,9 +855,3 @@ private void askSDCardWritePermissions() {
         }
 
 }
-
-
-
-
-
-
